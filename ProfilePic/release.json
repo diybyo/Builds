@@ -1,7 +1,7 @@
 {
     "type": "ProfilePic",
-    "version": "1.0.0.a",
+    "version": "1.0.0.b",
     "host": "10.0.0.1",
     "port": 80,
-    "bin": "diybyo_1.0.0a.jpg"
+    "bin": "diybyo_1.0.0b.jpg"
 }
