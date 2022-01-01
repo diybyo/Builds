@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta   http-equiv='Content-Type' content='text/html; charset=ISO-8859-1'>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="pragma" content="no-cache" />
+<meta name="viewport" content="width=device-width, initial-scale=0.85, maximum-scale=0.85, minimum-scale=0.85"/>
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
+    <title>WiFi Vendo</title>
+
+    <script type='text/javascript' src='jquery-3.5.1.min.js'></script>
+
+    <style type='text/css'>
+        html {
+            font-family: arial, helvetica;
+            position: relative;
+            height: 100%;
+            font-size: 100%;
+            line-height: 1.5;
+            color: #444;
+        }
+
+        body {
+           background: #a2a09b;
+           background: 
+              -webkit-linear-gradient(315deg,hsla(236.6,0%,53.52%,1) 0,hsla(236.6,0%,53.52%,0) 70%),
+              -webkit-linear-gradient(65deg,hsla(220.75,34.93%,26.52%,1) 10%,hsla(220.75,34.93%,26.52%,0) 80%),
+              -webkit-linear-gradient(135deg,hsla(46.42,36.62%,83.92%,1) 15%,hsla(46.42,36.62%,83.92%,0) 80%),
+              -webkit-linear-gradient(205deg,hsla(191.32,50.68%,56.45%,1) 100%,hsla(191.32,50.68%,56.45%,0) 70%);
+           background: 
+              linear-gradient(135deg,hsla(236.6,0%,53.52%,1) 0,hsla(236.6,0%,53.52%,0) 70%),
+              linear-gradient(25deg,hsla(220.75,34.93%,26.52%,1) 10%,hsla(220.75,34.93%,26.52%,0) 80%),
+              linear-gradient(315deg,hsla(46.42,36.62%,83.92%,1) 15%,hsla(46.42,36.62%,83.92%,0) 80%),
+              linear-gradient(245deg,hsla(191.32,50.68%,56.45%,1) 100%,hsla(191.32,50.68%,56.45%,0) 70%);
+        }
+
+        @-webkit-keyframes AnimationName {
+            0%   {background-position: 0% 50%}
+            50%  {background-position: 100% 51%}
+            100% {background-position: 0% 50%}
+        }
+        @-moz-keyframes AnimationName {
+            0%   {background-position: 0% 50%}
+            50%  {background-position: 100% 51%}
+            100% {background-position: 0% 50%}
+        }
+        @-o-keyframes AnimationName {
+            0%   {background-position: 0% 50%}
+            50%  {background-position: 100% 51%}
+            100% {background-position: 0% 50%}
+        }
+        @keyframes AnimationName {
+            0%   {background-position: 0% 50%}
+            50%  {background-position: 100% 51%}
+            100% {background-position: 0% 50%}
+        }
+        @keyframes glow {
+            20%  {box-shadow: 0 0 20px red;}
+            40%  {box-shadow: 0 0 20px red;}
+            65%  {box-shadow: 0 0 20px red;}
+            80%  {box-shadow: 0 0 20px red;}
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .child {
+            min-width: 400px;
+            min-height: calc(100vh - 90px);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        @-webkit-keyframes pulse {
+            from {box-shadow: 0 0 0 0 var(--btn-bg);}
+        }
+        @keyframes pulse {
+            from {box-shadow: 0 0 0 0 var(--btn-bg);}
+        }
+        @keyframes jittery {
+            5%,
+            50% {transform: scale(1);}
+            10% {transform: scale(0.9);}
+            15% {transform: scale(1.15);}
+            20% {transform: scale(1.15) rotate(-5deg);}
+            25% {transform: scale(1.15) rotate(5deg);}
+            30% {transform: scale(1.15) rotate(-3deg);}
+            35% {transform: scale(1.15) rotate(2deg);}
+            40% {transform: scale(1.15) rotate(0);}
+        }
+        .btn-pulse {
+            --primary-color: hsl(176, 78%, 61%);
+            font: inherit;
+            outline: 0;
+            cursor: pointer;
+            --btn-padding: 0.75rem 1.25rem;
+            --btn-radius: 4px;
+            position: relative;
+            padding: var(--btn-padding);
+            color: var(--btn-color, #000);
+            background: var(--btn-bg, #fff);
+            border: var(--btn-border);
+            border-radius: var(--btn-radius);
+            --btn-color: white;
+            --btn-bg: var(--primary-color);
+            --btn-border: 1px solid var(--btn-bg);
+            width: 100%;
+        }
+        .btn-pulse:hover {
+            box-shadow: 0 0 0 18px transparent;
+            -webkit-animation: pulse 1s;
+            animation: pulse 1s;
+        }
+        .btn-jittery {
+            -webkit-animation: jittery 4s infinite;
+            animation: jittery 4s infinite;
+            --primary-color: hsl(196, 78%, 61%);
+            font: inherit;
+            outline: 0;
+            cursor: pointer;
+            --btn-padding: 0.75rem 1.25rem;
+            --btn-radius: 4px;
+            position: relative;
+            padding: var(--btn-padding);
+            color: var(--btn-color, #000);
+            background: var(--btn-bg, #fff);
+            border: var(--btn-border);
+            border-radius: var(--btn-radius);
+            --btn-color: white;
+            --btn-bg: var(--primary-color);
+            --btn-border: 1px solid var(--btn-bg);
+            animation: jittery 4s infinite;
+            width: 100%;
+        }
+        #voucherInput {
+            -webkit-box-direction: normal;
+            box-sizing: border-box;
+            font-size: 1rem;
+            border: 1px solid #ced4da;
+            height: 45px;
+            padding: 4px 5px 4px 5px;
+            background-color: rgba(255, 255, 255, .8);
+        }
+        #btnRegister {
+            margin: 0;
+            border: 1px solid transparent;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.9;
+            border-radius: .25rem;
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+            cursor: pointer;
+            width: 150px;
+        }
+        #VendoSelection {
+            background: #fff;
+            border: 1px solid #d0d0d0;
+            border-radius: 2px;
+            font-size: inherit;
+            height: 3.14285714em;
+            padding: 4px 5px;
+            margin: 0;
+            width: 100%;
+        }
+
+        .wifi1 {animation: colorchange1 20s infinite linear;}
+        .wifi2 {animation: colorchange1 20s infinite linear;}
+        .wifi3 {animation: colorchange1 20s infinite linear;}
+        .wifi4 {animation: colorchange1 20s infinite linear;}
+        @keyframes colorchange1 {
+            12.5% {fill: #FF0000;}
+            25%   {fill: #FFA500;}
+            37.5% {fill: #FFFF00;}
+            50%   {fill: #7FFF00;}
+            62.5% {fill: #00FFFF;}
+            75%   {fill: #0000FF;}
+            87.5% {fill: #9932CC;}
+            100%  {fill: #FF1493;}
+        }
+
+        /**/
+        }
+
+
+        .modal-box {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            width: 98%;
+            background: white;
+            border-bottom: 1px solid #aaa;
+            border-radius: 4px;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-clip: padding-box;
+        }
+
+        @media (min-width: 32em) {
+            .modal-box {
+                width: 70%;
+            }
+        }
+
+        .modal-box header,
+        .modal-box .modal-header {
+            padding: 1.25em 1.5em;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-box header h3,
+        .modal-box header h4,
+        .modal-box .modal-header h3,
+        .modal-box .modal-header h4 {
+            margin: 0;
+        }
+
+        .modal-box .modal-body {
+            padding: 2em 1.5em;
+        }
+
+        .modal-box footer,
+        .modal-box .modal-footer {
+            padding: 1em;
+            border-top: 1px solid #ddd;
+            background: rgba(0, 0, 0, 0.02);
+            text-align: right;
+        }
+
+        .modal-overlay {
+            opacity: 0;
+            filter: alpha(opacity=0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 900;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3) !important;
+        }
+
+        a.close {
+            line-height: 1;
+            font-size: 1.5em;
+            position: absolute;
+            top: 5%;
+            right: 2%;
+            text-decoration: none;
+            color: #bbb;
+        }
+
+        a.close:hover {
+            color: #222;
+            -webkit-transition: color 1s ease;
+            -moz-transition: color 1s ease;
+            transition: color 1s ease;
+        }
+
+        .modal-box {
+            display: none;
+            position: absolute;
+            z-index: 1000;
+            width: 98%;
+            background: white;
+            border-bottom: 1px solid #aaa;
+            border-radius: 4px;
+            box-shadow: 0 3px 9px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            background-clip: padding-box;
+        }
+
+        @media (min-width: 32em) {
+            .modal-box {
+                width: 70%;
+            }
+        }
+
+        .modal-box header,
+        .modal-box .modal-header {
+            padding: 1.25em 1.5em;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .modal-box header h3,
+        .modal-box header h4,
+        .modal-box .modal-header h3,
+        .modal-box .modal-header h4 {
+            margin: 0;
+        }
+
+        .modal-box .modal-body {
+            padding: 2em 1.5em;
+        }
+
+        .modal-box footer,
+        .modal-box .modal-footer {
+            padding: 1em;
+            border-top: 1px solid #ddd;
+            background: rgba(0, 0, 0, 0.02);
+            text-align: right;
+        }
+
+        .modal-overlay {
+            opacity: 0;
+            filter: alpha(opacity=0);
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 900;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8) !important;
+        }
+        .usevoucher {
+            font-family: arial, helvetica;
+            font-size: 30px;
+            line-height: 1.5;
+        }
+        .example5 {
+            color: yellow;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var Server = 'http://10.0.0.2/';   // Main vendo
+        var App    = 'DIYFi';
+        var MyIP   = '$(ip)';
+        var MyMAC  = '$(mac)';
+
+soundfile = new Image(); 
+soundfile.src = 'sound/coindrop.mp3';
+
+        const CoinDrop     = new Audio('sound/coindrop.mp3');
+        const CoinMario    = new Audio('sound/coinsmario.mp3');
+        const CoinInsert   = new Audio('sound/insertcoinbg.mp3');
+        const Mario1Up     = new Audio('sound/mario1up.mp3');
+        const MarioPowerUp = new Audio('sound/mariopowerup.mp3');
+
+        const Maintenance = new Audio('sound/Maintenance.mp3');
+        const Wait        = new Audio('sound/Wait.mp3');
+        const Busy        = new Audio('sound/Busy.mp3');
+        const Offline     = new Audio('sound/Offline.mp3');
+
+        var Sound         = new Audio('sound/mario1up.mp3');
+        //Sound.pause();
+        //Sound.currentTime = 0;
+
+        var AjaxEnable = false;
+        var TimedOut   = false;
+        var currentRequest = null;
+        var InsertCoinStart = false;
+
+function playSound(Sound) {
+   if ((Sound.currentTime !== 0) && (Sound.currentTime > 0) && (Sound.currentTime < Sound.duration)) {
+      Sound.pause();
+      Sound.currentTime = 0;
+   }
+   //this.audioStream.src = "";
+   // this.audioCh1.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAVFYAAFRWAAABAAgAZGF0YQAAAAA=';
+  Sound.src = Sound;
+  Sound.play().catch(e => e);
+}
+
+function secondsToDhms(seconds) {
+	seconds = Number(seconds);
+	var d = Math.floor(seconds / (3600*24));
+	var h = Math.floor(seconds % (3600*24) / 3600);
+	var m = Math.floor(seconds % 3600 / 60);
+	var s = Math.floor(seconds % 60);
+
+	var dDisplay = d > 0 ? d + (d == 1 ? " Day " : " Days ") : "";
+	var hDisplay = h > 0 ? h + (h == 1 ? "" : "") : "0";
+	var mDisplay = m > 0 ? m + (m == 1 ? "" : "") : "0";
+	var sDisplay = s > 0 ? s + (s == 1 ? "" : "") : "0";
+	return dDisplay + " " + hDisplay + "h : " + mDisplay + "m : " + sDisplay + "s";
+}
+
+function setStorageValue(key, value){
+	if(localStorage != null){
+		localStorage.setItem(key, value);
+	}else{
+		setCookie(key,value,364);
+	}
+}
+
+function removeStorageValue(key){
+	if(localStorage != null){
+		localStorage.removeItem(key);
+	}else{
+		eraseCookie(key);
+	}
+}
+
+function getStorageValue(key){
+	if(localStorage!= null){
+		return localStorage.getItem(key);
+	}else{
+		return getCookie(key);
+	}
+}
+
+function setCookie(name,value,days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days*24*60*60*1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "")  + expires + "; path=/";
+}
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0;i < ca.length;i++) {
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+    }
+    return null;
+}
+function eraseCookie(name) {   
+    document.cookie = name+'=; Max-Age=-99999999;';  
+}
+
+function initVoucherHandler() {
+      var timer = setInterval(function() {
+        if (AjaxEnable && (!TimedOut)) {
+         currentRequest = jQuery.ajax({
+            url: Server+App,
+            type: 'post',
+            data: {'message':'start', 'IP':MyIP, 'MAC':MyMAC},
+            success: function(data) {
+               //console.log(data);
+               //$('#coininsert').html(data);
+
+               var Client = JSON.parse(data);
+               if (Client.Status=="OK") {
+                  var TimeLeft = Client.TimeRemaining;
+                  var Coins    = Client.CoinInserted; 
+                  var Credited = Client.CoinsCredited; 
+                  var Pending  = Client.CoinsPending; 
+                  var Voucher  = Client.VoucherCode;
+                  var Value    = Client.EquivTimeVal;   // in minutes
+                  var MTEquiv  = Client.EquivTimeStr;
+                  var TS       = Client.SystemTime; 
+                  var TimerMax = Client.CSCountDwnMax; 
+
+                  if (InsertCoinStart) {
+                     if (TimeLeft >= (TimerMax)) {
+console.log("Playing audio");
+    if (!((Sound.currentTime !== 0) && (Sound.currentTime > 0) && (Sound.currentTime < Sound.duration))) {
+   //this.audioStream.src = "";
+   // this.audioCh1.src = 'data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAVFYAAFRWAAABAAgAZGF0YQAAAAA=';
+       Sound.pause(); 
+       //Sound.currentTime = 0; 
+       Sound = CoinInsert; 
+       Sound.play().catch(e => e);
+    }
+/**/
+                     }
+                     InsertCoinStart=false;
+                  }
+
+                  $('#coininsert').html(data);
+
+
+                  if (Voucher != "") {
+                     var recentVoucher  = localStorage.getItem('lastvoucher');
+                     if (recentVoucher != Voucher) {
+                        //console.log("SAVED VOUCHER");
+                        localStorage.setItem('lastvoucher', Voucher);
+                        var allV = localStorage.getItem('allvouchers');
+                        if (allV!='' && allV!=null) { 
+                           var allVouchers = JSON.parse(allV);
+                        }
+                        else { var allVouchers = []; }
+                        allVouchers.push(Voucher);
+                        //console.log("ALL VOUCHERS: ", allVouchers);
+                        localStorage.setItem('allvouchers', JSON.stringify(allVouchers));
+                     }
+                  }
+
+                  if (Client.EquivTime != null) {
+                     //console.log(Voucher);
+                     $('#voucherInput').val(Voucher);
+                     $('#username').val(Voucher);
+                     $('#password').val(Voucher);
+                     var DISPLAY = "<h1>" + TimeLeft + "<br>" + Voucher + "<br>PhP (<b>" + Pending + "</b>), <b>" +Credited + "</b>/<b>"+ Coins + "</b><br>" + MTEquiv + "<br>" + TS + " </h1>";
+                     //$('#NODE').html();
+                     $('#coininsert').html(DISPLAY); 
+                 }
+ 
+                  if (Client.TimeRemaining<=1) {
+                     TimedOut=true;
+                     var DISPLAY = "<h1>" + Voucher + "<br>PhP " + Coins + "<br>" + MTEquiv + " </h1>FIN";
+                     //$('#NODE').html();
+                     $('#coininsert').html(DISPLAY); 
+                  }
+               }
+               else if (Client.Status=="WAIT") {
+                  $('#coininsert').html("Please wait..."); 
+                  Sound.pause(); Sound.currentTime = 0; Sound = Wait; Sound.play();
+               }
+               else if (Client.Status=="ClientQUIT") {
+                  //$('#coininsert').html("Please wait..."); 
+               }
+               else if (Client.Status=="BUSY") {
+                  TimedOut=true;
+                  $('#coininsert').html("NODE is BUSY with another client..."); 
+                  Sound.pause(); Sound.currentTime = 0; Sound = Busy; Sound.play();
+               }
+               else if (Client.Status=="TERMINATED") {
+                  TimedOut=true;
+                  $('#NODE').html("NODE terminated your SESSION");
+               }
+               else if (Client.Status=="UnderMaintenance") {
+                  TimedOut=true;
+                  $('#coininsert').html("NODE is Ongoing Maintenance..."); 
+                  Sound.pause(); Sound.currentTime = 0; Sound = Maintenance; Sound.play();
+               }
+               else {
+                  TimedOut=true;
+                  $('#coininsert').html(Client.Status); 
+               }
+
+            },
+            error:function(e){
+               TimedOut=true;
+               if (currentRequest !== null) currentRequest.abort();
+               //console.log("NODE is NOT answering");
+               //$('#NODE').html("NODE is NOT answering");
+               $('#coininsert').html("NODE is NOT responding..."); 
+               Sound.pause(); Sound.currentTime = 0; Sound = Offline; Sound.play();
+               //clearInterval(timer); timer = 0;
+            },
+            timeout: 5000, // sets timeout to 3 seconds
+         });
+       }
+       if (TimedOut) {
+          currentRequest.abort();
+       }
+      }, 1000); 
+}
+
+
+function recallSavedVoucher() {
+   var MyRecentVoucher = localStorage.getItem('lastvoucher');
+   if (MyRecentVoucher != "undefined" && MyRecentVoucher != "") {
+console.log(MyRecentVoucher);
+      $('#voucherInput').val(MyRecentVoucher);
+      //$('#username').val(MyRecentVoucher);
+      //$('#password').val(MyRecentVoucher);
+      document.login.username.value = MyRecentVoucher;
+      document.login.password.value = MyRecentVoucher;
+   }
+   else {
+      $('#voucherInput').val("");
+      document.login.username.value = "";
+      document.login.password.value = "";
+   }
+}
+
+function ShowVouchers() {
+   $('#vouchers').html('chad');
+   var MESSAGE = "";
+   var MyRecentVoucher = localStorage.getItem('lastvoucher');
+   var MyVouchers      = localStorage.getItem('allvouchers');
+
+   if (MyVouchers != "") {
+      var allV1 = JSON.parse(MyVouchers); // build array
+      var allV2 = allV1.reverse();  // reverse the order - most recent first
+      //allV2.shift();    // remove the last item from the list
+      //console.log("ALL VOUCHERS: ", allVouchers);
+
+      var Title='click this to use the code';
+      var vPool="";   
+      var Counter = 0;
+      $.each(allV2, function(i, val) {
+         if (val == MyRecentVoucher) {
+            vPool += "<span class='delvoucher' rel='"+val+"'><b>XXXXX</b></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='usevoucher' rel='"+val+"' title='"+Title+"'><b>" + val + "</b></span> <br />"; 
+         }
+         else {
+            vPool += "<span class='delvoucher' rel='"+val+"'><b>XXXXX</b></span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class='usevoucher' rel='"+val+"' title='"+Title+"'>" + val + "</span> <br />"; 
+         }
+         if (++Counter >= 7) {
+            vPool += "+++";
+            return false; // break loop
+         }
+      });
+      MESSAGE += vPool;
+   }
+
+   $('#vouchers').html(MESSAGE);
+}
+
+function PopulateVendoOptions() {
+      $.get("nodes.txt", function(data, status){
+         data = data.slice(0, -1); // remove last char
+         data = '['+data+']'; // fix json string
+         //console.log(data);
+         var tableValues = $.parseJSON(data); // raw data
+         if (!$.isEmptyObject(tableValues)) {
+            // remove duplicate in array
+            // https://stackoverflow.com/questions/23507853/remove-duplicate-objects-from-json-array
+            map = {}; for (let list of tableValues) { map[Object.values(list).join('')] = list; }
+           $.each(map, function() {
+              //console.log(this.HostName, " ", this.IP, " ", this.NickName);
+              var IP = this.IP;
+              var HN = this.HostName;
+              var NN = this.NickName;
+              if (IP != "10.0.0.2") $('#VendoSelection').append($('<option>', { value: this.IP, text : this.HostName }));
+           });
+         }
+      });
+}
+
+        $(document).ready(function(){
+           $(".js-modal-close, .modal-overlay").click(function() {
+               $(".modal-box, .modal-overlay").fadeOut(300, function() { $(".modal-overlay").fadeOut(100).remove(); });
+               CoinInsert.pause(); CoinInsert.currentTime = 0; 
+
+               if (currentRequest !== null) { // abort any active ajax session
+                  currentRequest.abort();
+                  TimedOut=true;
+                  jQuery.ajax({url: Server, type:'post', data:'message=finish' });
+               }
+           });
+
+           $(window).resize(function() {
+               $(".modal-box").css({
+                  top: ($(window).height() - $(".modal-box").outerHeight()) / 2,
+                  left: ($(window).width() - $(".modal-box").outerWidth()) / 2
+               });
+           });
+
+           $(window).resize();
+
+           //localStorage.setItem('lastvoucher', ''); localStorage.setItem('allvouchers', ''); // FOR DEBUG
+
+           // retrieve most recent voucher used
+
+           recallSavedVoucher();
+
+           initVoucherHandler();
+
+           PopulateVendoOptions();
+
+           $("#btnRegister").focus();
+
+        });
+
+
+        $(document).on('click', '#WIFIlogo', function() {
+           MarioPowerUp.play();
+        });
+
+        $(document).on('click', '#btnRegister', function() {
+           CoinDrop.play();
+        });
+
+        $(document).on('click', '#GetVoucher', function() {
+           var appendthis = ("<div class='modal-overlay js-modal-close'></div>");
+           $("body").append(appendthis);
+           $(".modal-overlay").fadeTo(500, 0.7);
+           $('#popup1').fadeIn($(this).data());
+
+           $('#coininsert').html("Activating vendo, please wait...");
+           $('#ServerInfo').text(Server);
+           AjaxEnable = true;
+           TimedOut=false;
+
+           InsertCoinStart = true;
+        });
+
+        $(document).on('click', '#ShowRates', function() {
+                var appendthis = ("<div class='modal-overlay js-modal-close'></div>");
+                $("body").append(appendthis);
+                $(".modal-overlay").fadeTo(500, 0.7);
+                $('#popup2').fadeIn($(this).data());
+                Mario1Up.play();
+
+                $.ajax ({type: "POST", url: Server+"getRates.php", success: function(data){ $('#rates').html(data); } });
+        });
+
+        $(document).on('click', '#ShowVouchers', function() {
+                var appendthis = ("<div class='modal-overlay js-modal-close'></div>");
+                $("body").append(appendthis);
+                $(".modal-overlay").fadeTo(500, 0.7);
+                $('#popup3').fadeIn($(this).data());
+                Mario1Up.play();
+
+                ShowVouchers();
+        });
+
+        $(document).on('click', '#overlay', function() {
+           console.log("overlay click");
+           alert("overlay click");
+        });
+
+      $(document).on('click', '.usevoucher', function() {
+         var Voucher = $(this).attr('rel');
+         //console.log("USE ", Voucher);
+         localStorage.setItem('lastvoucher', Voucher);
+         $('#voucherInput').val(Voucher);
+         $('#username').val(Voucher);
+         $('#password').val(Voucher);
+
+         document.login.username.value = Voucher;
+         document.login.password.value = Voucher;
+
+         ShowVouchers();
+      });
+
+      $(document).on('click', '.delvoucher', function() {
+         var Voucher = $(this).attr('rel');
+         if (confirm('are you sure you want to delete: '+Voucher)) {
+            //console.log("DEL ", Voucher);
+            var MyRecentVoucher = localStorage.getItem('lastvoucher');
+            var MyVouchers      = localStorage.getItem('allvouchers');
+            if (MyVouchers != "") {
+               var allV = JSON.parse(MyVouchers); // build array
+               //var allV2 = allV.reverse();  // reverse the order - most recent first
+               var allVouchers = allV.filter(function(elem){ return elem != Voucher;  });
+               if (MyRecentVoucher == Voucher) { // are we removing the most recent one?
+                  var NewSelectedVoucher = allVouchers[0];
+                  localStorage.setItem('lastvoucher', NewSelectedVoucher); // make the first entry the latest
+                  $('#voucherInput').val(NewSelectedVoucher);
+                  $('#username').val(NewSelectedVoucher);
+                  $('#password').val(NewSelectedVoucher);
+               }
+               localStorage.setItem('allvouchers', JSON.stringify(allVouchers));
+            }
+            ShowVouchers();
+         }
+      });
+
+      $(document).on('change', '#VendoSelection', function() {
+         var VendoSelected = $('#VendoSelection').find(":selected").val(); // .text();
+         //console.log(VendoSelected);
+         Server = "http://"+VendoSelected+"/";
+         //console.log(Server);
+      });
+    </script>
+</head>
+
+<body translate="no">
+    <div class="container">
+        <div class="child">
+            <table border='0' width='100%' align='center'>
+                <tr>
+                    <td>
+                        <svg id="WIFIlogo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="300.000000pt" height="200.000000pt" viewBox="0 0 1280.000000 942.000000" preserveAspectRatio="xMidYMid meet">
+                            <g transform="translate(0.000000,942.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                                <path class="wifi1" d="M6045 9414 c-602 -35 -926 -75 -1416 -174 -1619 -328 -3199 -1169
+                           -4339 -2310 -170 -170 -212 -229 -257 -365 -23 -71 -26 -96 -26 -215 0 -119 3
+                           -144 26 -215 38 -115 91 -198 182 -290 137 -138 304 -207 498 -207 112 1 164
+                           10 261 46 103 39 164 85 354 263 447 421 822 707 1303 996 937 563 1941 892
+                           3081 1009 293 30 1029 33 1323 5 1148 -109 2188 -445 3134 -1014 482 -290 858
+                           -578 1306 -999 188 -177 247 -221 353 -260 95 -36 147 -45 259 -46 194 0 361
+                           69 498 207 91 92 144 175 182 290 23 71 26 96 26 215 0 119 -3 144 -26 215
+                           -45 136 -87 195 -257 365 -603 604 -1378 1158 -2179 1559 -1030 516 -2088 810
+                           -3266 906 -177 15 -875 28 -1020 19z" />
+                                <path class="wifi2" d="M5945 6800 c-405 -33 -810 -101 -1177 -200 -1003 -271 -1965 -821
+                           -2679 -1530 -154 -152 -170 -172 -207 -250 -183 -381 4 -819 403 -946 169 -54
+                           333 -40 501 41 78 38 109 61 220 166 418 395 777 647 1249 879 1233 606 2656
+                           661 3945 153 423 -167 862 -421 1217 -705 150 -120 162 -131 369 -323 207
+                           -191 316 -240 534 -239 98 1 127 5 195 28 119 41 181 80 275 175 137 138 194
+                           276 194 471 0 121 -22 208 -82 325 -76 147 -516 546 -917 830 -877 623 -1860
+                           990 -2970 1111 -174 19 -890 28 -1070 14z" />
+                                <path class="wifi3" d="M6065 4360 c-784 -76 -1486 -366 -2082 -861 -159 -132 -319 -296
+                           -360 -369 -212 -372 -32 -843 373 -976 80 -26 102 -29 214 -29 111 1 134 4
+                           205 29 112 39 179 82 302 197 408 380 885 601 1420 659 166 18 515 8 668 -19
+                           389 -69 740 -219 1041 -444 54 -40 159 -128 232 -194 189 -171 291 -220 477
+                           -230 275 -14 519 128 640 372 46 93 68 190 68 300 0 111 -21 194 -74 305 -37
+                           75 -57 100 -168 210 -570 565 -1315 922 -2164 1036 -132 18 -656 27 -792 14z" />
+                                <path class="wifi4" d="M6281 1650 c-273 -38 -508 -206 -632 -451 -187 -373 -62 -837 286
+                           -1062 151 -97 269 -131 455 -131 160 0 244 19 379 89 206 107 347 280 417 512
+                           36 119 38 305 5 428 -65 242 -236 446 -458 547 -133 60 -313 87 -452 68z" />
+                            </g>
+                        </svg>
+                        <hr>
+                    </td>
+                </tr>
+                <tr>
+                    <td align='center'>
+                        <span style="font-size:40px; text-shadow: -3px -3px 11px rgba(225,225,120,0.7);">FREE WIFI</span>
+                        
+                        <select id='VendoSelection' style="margin-bottom: 10px" name="VendoSelection">
+                           <option value='10.0.0.2'>Main</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td align='center'>
+                        <button id='GetVoucher'   class="btn-jittery">Get Voucher</button>
+                        <br><br>
+                        <button id='ShowRates'    class="btn-pulse">View Rates</button>
+                        <br><br>
+                        <button id='ShowVouchers' class="btn-pulse">Saved Vouchers</button>
+                        <br><br>
+                    </td>
+                </tr>
+                <tr>
+                    <td align='center'>
+                        <div>
+
+    $(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" style="display:none">
+        <input type="hidden" name="username" />
+        <input type="hidden" name="password" />
+        <input type="hidden" name="dst" value="$(link-orig)" />
+        <input type="hidden" name="popup" value="true" />
+    </form>
+
+    <script src="/md5.js"></script>
+    <script>
+        function doLogin() {
+            document.sendin.username.value = document.login.username.value;
+            //document.sendin.password.value = hexMD5('$(chap-id)' + document.login.password.value + '$(chap-challenge)');
+            document.sendin.password.value = hexMD5('$(chap-id)' + document.login.username.value + '$(chap-challenge)');
+
+//console.log("login un ", document.login.username.value);
+//console.log("login pw", document.login.password.value);
+//console.log("sendin un", document.sendin.username.value);
+//console.log("sendin pw", document.sendin.password.value);
+
+            document.sendin.submit();
+            return false;
+        }
+
+    </script>
+    $(endif)
+    
+
+                <form name="login" action="$(link-login-only)" method="post" $(if chap-id) onSubmit="return doLogin()" $(endif)>
+                    <input type="hidden" name="dst" value="$(link-orig)" />
+                    <input type="hidden" name="popup" value="true" />
+                    <p class="info $(if error)alert$(endif)">
+                        $(if error)$(error)$(endif)
+                    </p>
+                    <input class="form-control" name="username" id="voucherInput" type="text" style="width: 60%" value="$(username)" placeholder="Voucher">
+                    <input name="password" type="hidden" placeholder="Password" />
+                    <button type="submit" class="btn btn-primary" id="btnRegister">Login</button>
+                </form>
+
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <hr>
+                        <div class="example5" style="font-color:red;">
+                            <h3>Powered by Mikrotik</h3>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+<div id="popup1" class="modal-box">
+<header> <a href="#" class="js-modal-close close">x</a> <h3>Get Voucher [<span id='ServerInfo'></span>]</h3> </header>
+<div class="modal-body" id='coininsert'></div>
+<footer> <a href="#" class="btn btn-small js-modal-close">Close</a> </footer>
+</div>
+
+<div id="popup2" class="modal-box">
+<header><a href="#" class="js-modal-close close">x</a><h3>Vendo Rates</h3></header>
+<div class="modal-body" id='rates'></div>
+<footer> <a href="#" class="btn btn-small js-modal-close">Close</a> </footer>
+</div>
+
+<div id="popup3" class="modal-box">
+<header><a href="#" class="js-modal-close close">x</a><h3>Saved Vouchers</h3></header>
+<div class="modal-body" id='vouchers'></div>
+<footer> <a href="#" class="btn btn-small js-modal-close">Close</a> </footer>
+</div>
+	
+</body>
+
+</html>
