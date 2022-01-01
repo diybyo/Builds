@@ -227,6 +227,20 @@ function saveRateMatrix(Matrix="") {
           }
        });
 
+       $(document).on('click', '#FactoryReset',function(e){  
+          if (confirm("System Factory Reset now?")) {
+             $.ajax({
+                  timeout:3000, //3 second timeout
+                  url: Server, type: 'post', async: 'false', cache: false,
+                  data: { 'action':'factoryreset', 'TimeStamp':new Date().getTime() },
+                  }).done(function (Response) {
+                     alert(Response);
+                  }).fail(function (jqXHR, textStatus) {
+                     alert("ERROR device not responding.");
+             }); 
+          }
+       });
+
        $(document).on('click', '#ConfigSystemSave',function(e){   // AlphaNumeric
           if (confirm('Save?')) saveSystemConfig();
        });
@@ -393,6 +407,9 @@ function saveRateMatrix(Matrix="") {
                                                 </tr>
                                                 <tr><td colspan='2'>
                                                    <button class="btn btn-primary" type="button" id="SystemReboot">Reboot</button>
+                                                </td>
+                                                <tr><td colspan='2'>
+                                                   <button class="btn btn-primary" type="button" id="FactoryReset">Factory Reset</button>
                                                 </td></tr>
                                             </tbody>
                                         </table>
