@@ -122,7 +122,17 @@
        function saveSystemConfig() {
           var postData = ConcatPins([
              $('#ConfigSystemLcdType :selected').val(),
-             $('#ConfigSystemNickname').val()
+             $('#ConfigSystemNickname').val(),
+             $('#ConfigSystemSSID').val(),
+             $('#ConfigSystemMTIP').val(),
+             $('#ConfigSystemMTIP').val(),
+             $('#ConfigSystemMTUN').val(),
+             $('#CConfigSystemMTPW').val(),
+             $('#ConfigSystemMTConn :selected').val(),
+             $('#ConfigSystemGmailAddr').val(),
+             $('#ConfigSystemGmailPW').val(),
+             $('#ConfigSystemTeleChatID').val(),
+             $('#ConfigSystemTeleBotID').val(),
           ]);
           console.log(postData);
           $.ajax({
@@ -574,12 +584,12 @@ function saveRateMatrix(Matrix="") {
                                                 </tr>
 
                                                 <tr style="padding: 5px;">
-                                                    <td style="padding: 5px;font-weight: bold;">Telegram BotID</td>
-                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleID' value=''></td>
+                                                    <td style="padding: 5px;font-weight: bold;">Telegram ChatID</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleChatID' value=''></td>
                                                 </tr>
                                                 <tr style="padding: 5px;">
-                                                    <td style="padding: 5px;font-weight: bold;">Telegram APIKey</td>
-                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleAPI' value=''></td>
+                                                    <td style="padding: 5px;font-weight: bold;">Telegram BotID</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleBotID' value=''></td>
                                                 </tr>
 
 
