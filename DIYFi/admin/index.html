@@ -79,7 +79,7 @@
                 $('#'+id).val(Response);
              }
              else if (type=='select') {
-                console.log("select: "+Response);
+                //console.log("select: "+Response);
                 $("#"+id+" option[value='"+Response+"']").prop('selected', true); 
                 $('#'+id+' select').val(Response).change();
              }
@@ -352,7 +352,7 @@ function saveRateMatrix(Matrix="") {
           getStatus();
 
           for(let c in PINS){
-               console.log(c , " " , PINS[c]);
+               //console.log(c , " " , PINS[c]);
                $('#CoinslotCounterPIN').append($('<option>', { value: c, text: PINS[c] }));
                $('#CoinslotEnablePIN').append($('<option>', { value: c, text: PINS[c] }));
                $('#AdminPIN').append($('<option>', { value: c, text: PINS[c] }));
@@ -373,7 +373,7 @@ function saveRateMatrix(Matrix="") {
           }
 
             GetRateMatrix();
-            console.log('READY');
+            //console.log('READY');
        });
 
     </script>
