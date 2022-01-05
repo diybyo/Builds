@@ -75,7 +75,7 @@
              url: Server, type: 'post', async: 'false', cache: false,
              data: { 'info':'AdminInfo', 'TimeStamp':new Date().getTime() },
           }).done(function (Response) {
-             //console.log(Response);
+             console.log(Response);
              if (Response) {
                 $('#Status_DeviceID').html(Response.DeviceID);
                 $('#Status_InstallDate').html(Response.InstallDate);
@@ -85,6 +85,7 @@
                 $('#ConfigFirmwareType').html(Response.ReleaseType);
                 $("#ConfigSystemLcdType option[value='"+ Response.LCDType +"']").prop('selected', true); 
                 $('#ConfigSystemLcdType select').val(Response.LCDType).change();
+                $('#ConfigSystemNickname').html(Response.NickName);
              }
           }).fail(function (jqXHR, textStatus) {
              $('#'+id).html('');
