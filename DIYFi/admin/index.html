@@ -87,18 +87,16 @@
                 $('#ConfigSystemLcdType select').val(Response.LCDType).change();
                 $('#ConfigSystemNickname').val(Response.NickName);
 
-
                 $('#ConfigSystemSSID').val(Response.SSID);
                 $('#ConfigSystemMTIP').val(Response.SSH_SVR);
                 $('#ConfigSystemMTUN').val(Response.SSH_UN);
                 $('#ConfigSystemMTPW').val(Response.SSH_PW);
-/*
-                $('#ConfigSystemMTConn').val(Response.NickName);
-                $('#ConfigSystemGmailAddr').val(Response.NickName);
-                $('#ConfigSystemGmailPW').val(Response.NickName);
-                $('#ConfigSystemTeleChatID').val(Response.NickName);
-                $('#ConfigSystemTeleBotID').val(Response.NickName);
-/**/
+                $("#ConfigSystemMTConn option[value='"+ Response.MTConn +"']").prop('selected', true); 
+                $('#ConfigSystemMTConn select').val(Response.MTConn).change();
+                $('#ConfigSystemGmailAddr').val(Response.GmailAddr);
+                $('#ConfigSystemGmailPW').val(Response.GmailPW);
+                $('#ConfigSystemTeleChatID').val(Response.ChatID);
+                $('#ConfigSystemTeleBotID').val(Response.BotID);
              }
           }).fail(function (jqXHR, textStatus) {
              $('#'+id).html('');
