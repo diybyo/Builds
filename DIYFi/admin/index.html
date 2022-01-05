@@ -85,7 +85,20 @@
                 $('#ConfigFirmwareType').html(Response.ReleaseType);
                 $("#ConfigSystemLcdType option[value='"+ Response.LCDType +"']").prop('selected', true); 
                 $('#ConfigSystemLcdType select').val(Response.LCDType).change();
-                $('#ConfigSystemNickname').html(Response.NickName);
+                $('#ConfigSystemNickname').val(Response.NickName);
+
+
+                $('#ConfigSystemSSID').val(Response.SSID);
+                $('#ConfigSystemMTIP').val(Response.SSH_SVR);
+                $('#ConfigSystemMTUN').val(Response.SSH_UN);
+                $('#ConfigSystemMTPW').val(Response.SSH_PW);
+/*
+                $('#ConfigSystemMTConn').val(Response.NickName);
+                $('#ConfigSystemGmailAddr').val(Response.NickName);
+                $('#ConfigSystemGmailPW').val(Response.NickName);
+                $('#ConfigSystemTeleChatID').val(Response.NickName);
+                $('#ConfigSystemTeleBotID').val(Response.NickName);
+/**/
              }
           }).fail(function (jqXHR, textStatus) {
              $('#'+id).html('');
