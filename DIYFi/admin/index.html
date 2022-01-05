@@ -96,7 +96,12 @@
                 $('#ConfigSystemGmailAddr').val(Response.GmailAddr);
                 $('#ConfigSystemGmailPW').val(Response.GmailPW);
                 $('#ConfigSystemTeleChatID').val(Response.ChatID);
-                $('#ConfigSystemTeleBotID').val(Response.BotID);
+                $('#ConfigSystemTeleBotID').val(Response.RateMatrix);
+
+                console.log(atob(Response.CONFIG));
+                console.log(atob(Response.PINS));
+                console.log(atob(Response.RATES));
+                console.log(atob(Response.CONFIG));
              }
           }).fail(function (jqXHR, textStatus) {
              $('#'+id).html('');
@@ -138,7 +143,7 @@
              url: Server, type: 'post', async: 'false', cache: false,
              data: { 'action':'getpins', 'TimeStamp':new Date().getTime() },
           }).done(function (Response) {
-             //console.log("PINS From Server: ", Response); 
+             console.log("PINS From Server: ", Response); 
              //if (Response=="ERROR") return false;
              var PinConfig = Response.split('|');
              //console.log(PinConfig);
@@ -159,7 +164,6 @@
              $('#ConfigSystemLcdType :selected').val(),
              $('#ConfigSystemNickname').val(),
              $('#ConfigSystemSSID').val(),
-             $('#ConfigSystemMTIP').val(),
              $('#ConfigSystemMTIP').val(),
              $('#ConfigSystemMTUN').val(),
              $('#ConfigSystemMTPW').val(),
@@ -190,7 +194,7 @@
                   $('#StatusLedPIN').val(),
                   $('#BuzzerPIN').val()
 	  ]);
-          //console.log(postData);
+          console.log(postData);
           $.ajax({
              timeout:3000, //3 second timeout
              url: Server, type: 'post', async: 'false', cache: false,
@@ -376,19 +380,20 @@ function saveRateMatrix(Matrix="") {
                $('#BuzzerPIN').append($('<option>', { value: c, text: PINS[c] }));
           }
 
-          if (!getPINs()) {
-               // Assume PIN assignment. In prod, you can get the values from config and then set it here...
-               var DisablePinIndex = 13; // if you change the PINS definition above, be sure to change this also
-               $('#CoinslotCounterPIN').prop('selectedIndex', DisablePinIndex);
-               $('#CoinslotEnablePIN').prop('selectedIndex', DisablePinIndex);
-               $('#AdminPIN').prop('selectedIndex', DisablePinIndex);
-               $('#ClientPushButtonPIN').prop('selectedIndex', DisablePinIndex);
-               $('#StatusLedPIN').prop('selectedIndex', DisablePinIndex);
-               $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
-          }
-
           setTimeout(function() { getAdminInfo();  }, 1000);
-          setTimeout(function() { GetRateMatrix(); }, 2000);
+          setTimeout(function() { 
+             if (!getPINs()) {
+                // Assume PIN assignment. In prod, you can get the values from config and then set it here...
+                var DisablePinIndex = 13; // if you change the PINS definition above, be sure to change this also
+                $('#CoinslotCounterPIN').prop('selectedIndex', DisablePinIndex);
+                $('#CoinslotEnablePIN').prop('selectedIndex', DisablePinIndex);
+                $('#AdminPIN').prop('selectedIndex', DisablePinIndex);
+                $('#ClientPushButtonPIN').prop('selectedIndex', DisablePinIndex);
+                $('#StatusLedPIN').prop('selectedIndex', DisablePinIndex);
+                $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
+             }
+          }, 2000);
+          setTimeout(function() { GetRateMatrix(); }, 3000);
           
           //console.log('READY');
        });
