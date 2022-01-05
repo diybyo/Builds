@@ -69,6 +69,20 @@
           return true;
       }
 
+       function getAdminInfo() {
+          $.ajax({
+             timeout:3000, //3 second timeout
+             url: Server, type: 'post', async: 'false', cache: false,
+             data: { 'info':'AdminInfo', 'TimeStamp':new Date().getTime() },
+          }).done(function (Response) {
+             console.log(Response);
+          }).fail(function (jqXHR, textStatus) {
+             $('#'+id).html('');
+             if (textStatus === 'timeout') { alert('Failed from timeout'); }
+          });
+       }
+
+
        function getInfo(info, id, type) {
           $.ajax({
              timeout:3000, //3 second timeout
@@ -370,10 +384,10 @@ function saveRateMatrix(Matrix="") {
                $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
           }
 
-          setTimeout(function() { getStatus();    }, 2000);
-          setTimeout(function() { GetRateMatrix(); }, 3000);
+          setTimeout(function() { getAdminInfo(); }, 1000);
 
-            //console.log('READY');
+          //getStatus();    GetRateMatrix();
+          //console.log('READY');
        });
 
     </script>
