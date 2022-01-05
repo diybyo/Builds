@@ -168,9 +168,9 @@
        }
 
        function getStatus() {
-          //getInfo('DeviceID',    'Status_DeviceID');
-          //getInfo('InstallDate', 'Status_InstallDate');
-          //getInfo('Uptime',      'Status_Uptime');
+          getInfo('DeviceID',    'Status_DeviceID');
+          getInfo('InstallDate', 'Status_InstallDate');
+          getInfo('Uptime',      'Status_Uptime');
 
           getInfo('Firmware',    'ConfigFirmware');
           getInfo('CompileDate', 'ConfigFirmwareCompileDate');
@@ -349,8 +349,6 @@ function saveRateMatrix(Matrix="") {
 
 
        $(document).ready(function(){
-          getStatus();
-
           for(let c in PINS){
                //console.log(c , " " , PINS[c]);
                $('#CoinslotCounterPIN').append($('<option>', { value: c, text: PINS[c] }));
@@ -372,7 +370,9 @@ function saveRateMatrix(Matrix="") {
                $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
           }
 
-            GetRateMatrix();
+          setTimeout(function() { getStatus();    }, 2000);
+          setTimeout(function() { GetRateMatrix(); }, 3000);
+
             //console.log('READY');
        });
 
