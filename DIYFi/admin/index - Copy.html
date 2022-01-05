@@ -75,22 +75,13 @@
              url: Server, type: 'post', async: 'false', cache: false,
              data: { 'info':'AdminInfo', 'TimeStamp':new Date().getTime() },
           }).done(function (Response) {
-             //console.log(Response);
-             if (Response) {
-                $('#Status_DeviceID').html(Response.DeviceID);
-                $('#Status_InstallDate').html(Response.InstallDate);
-                $('#Status_Uptime').html(secondsToDhms(Response.UpTime));
-                $('#ConfigFirmware').html(Response.FirmwareVer);
-                $('#ConfigFirmwareCompileDate').html(Response.CompileDate);
-                $('#ConfigFirmwareType').html(Response.ReleaseType);
-                $("#ConfigSystemLcdType option[value='"+ Response.LCDType +"']").prop('selected', true); 
-                $('#ConfigSystemLcdType select').val(Response.LCDType).change();
-             }
+             console.log(Response);
           }).fail(function (jqXHR, textStatus) {
              $('#'+id).html('');
              if (textStatus === 'timeout') { alert('Failed from timeout'); }
           });
        }
+
 
        function getInfo(info, id, type) {
           $.ajax({
@@ -188,6 +179,19 @@
           }).fail(function (jqXHR, textStatus) {
              alert("ERROR encountered during save.");
           });
+       }
+
+       function getStatus() {
+          getInfo('DeviceID',    'Status_DeviceID');
+          getInfo('InstallDate', 'Status_InstallDate');
+          getInfo('Uptime',      'Status_Uptime');
+
+          getInfo('Firmware',    'ConfigFirmware');
+          getInfo('CompileDate', 'ConfigFirmwareCompileDate');
+          getInfo('ReleaseType', 'ConfigFirmwareType');
+
+          getInfo('NickName',    'ConfigSystemNickname', 'textbox');
+          getInfo('LCDType',     'ConfigSystemLcdType', 'select');
        }
 
       function RateMatrixAddRow(Name='', Cost='', Minute='') { 
@@ -353,6 +357,11 @@ function saveRateMatrix(Matrix="") {
          });
 
 
+
+
+
+
+
        $(document).ready(function(){
           for(let c in PINS){
                //console.log(c , " " , PINS[c]);
@@ -375,9 +384,9 @@ function saveRateMatrix(Matrix="") {
                $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
           }
 
-          setTimeout(function() { getAdminInfo();  }, 1000);
-          setTimeout(function() { GetRateMatrix(); }, 2000);
-          
+          setTimeout(function() { getAdminInfo(); }, 1000);
+
+          //getStatus();    GetRateMatrix();
           //console.log('READY');
        });
 
