@@ -98,10 +98,21 @@
                 $('#ConfigSystemTeleChatID').val(Response.ChatID);
                 $('#ConfigSystemTeleBotID').val(Response.RateMatrix);
 
-                console.log(atob(Response.CONFIG));
-                console.log(atob(Response.PINS));
-                console.log(atob(Response.RATES));
-                console.log(atob(Response.CONFIG));
+                //console.log(atob(Response.CONFIG));
+                //console.log(atob(Response.PINS));
+                //console.log(atob(Response.RATES));
+                //console.log(atob(Response.CONFIG));
+
+                var PINS = atob(Response.PINS);
+                var PinConfig = PINS.split('|');
+                console.log(PinConfig);
+                $("#CoinslotCounterPIN   option[value='"+ PinConfig[0] +"']").prop('selected', true); 
+                $("#CoinslotEnablePIN    option[value='"+ PinConfig[1] +"']").prop('selected', true); 
+                $("#AdminPIN             option[value='"+ PinConfig[2] +"']").prop('selected', true); 
+                $("#ClientPushButtonPIN  option[value='"+ PinConfig[3] +"']").prop('selected', true); 
+                $("#StatusLedPIN         option[value='"+ PinConfig[4] +"']").prop('selected', true); 
+                $("#BuzzerPIN            option[value='"+ PinConfig[5] +"']").prop('selected', true); 
+
              }
           }).fail(function (jqXHR, textStatus) {
              $('#'+id).html('');
@@ -381,6 +392,7 @@ function saveRateMatrix(Matrix="") {
           }
 
           setTimeout(function() { getAdminInfo();  }, 1000);
+/*
           setTimeout(function() { 
              if (!getPINs()) {
                 // Assume PIN assignment. In prod, you can get the values from config and then set it here...
@@ -394,8 +406,8 @@ function saveRateMatrix(Matrix="") {
              }
           }, 2000);
           setTimeout(function() { GetRateMatrix(); }, 3000);
-          
-          //console.log('READY');
+          /**/
+          console.log('READY');
        });
 
     </script>
