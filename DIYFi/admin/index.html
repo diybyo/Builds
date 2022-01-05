@@ -96,7 +96,7 @@
                 $('#ConfigSystemGmailAddr').val(Response.GmailAddr);
                 $('#ConfigSystemGmailPW').val(Response.GmailPW);
                 $('#ConfigSystemTeleChatID').val(Response.ChatID);
-                $('#ConfigSystemTeleBotID').val(Response.RateMatrix);
+                $('#ConfigSystemTeleBotID').val(Response.BotID);
 
                 //console.log(atob(Response.CONFIG));
                 //console.log(atob(Response.PINS));
@@ -392,8 +392,8 @@ function saveRateMatrix(Matrix="") {
           }
 
           setTimeout(function() { getAdminInfo();  }, 1000);
-/*
-          setTimeout(function() { 
+
+          /*setTimeout(function() { 
              if (!getPINs()) {
                 // Assume PIN assignment. In prod, you can get the values from config and then set it here...
                 var DisablePinIndex = 13; // if you change the PINS definition above, be sure to change this also
@@ -404,9 +404,10 @@ function saveRateMatrix(Matrix="") {
                 $('#StatusLedPIN').prop('selectedIndex', DisablePinIndex);
                 $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
              }
-          }, 2000);
-          setTimeout(function() { GetRateMatrix(); }, 3000);
-          /**/
+          }, 2000); /**/
+
+          setTimeout(function() { GetRateMatrix(); }, 3000); /**/
+
           console.log('READY');
        });
 
