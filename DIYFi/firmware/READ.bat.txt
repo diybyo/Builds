@@ -1,0 +1,6 @@
+rem https://cyberblogspot.com/how-to-install-esptool-on-windows-10/
+rem https://cyberblogspot.com/how-to-save-and-restore-esp8266-and-esp32-firmware/
+
+esptool.py --baud 115200 --port COM4 read_flash 0x0 0x400000 BACKUP.bin
+
+pause
