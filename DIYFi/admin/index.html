@@ -75,7 +75,7 @@
              url: Server, type: 'post', async: 'false', cache: false,
              data: { 'info':'AdminInfo', 'TimeStamp':new Date().getTime() },
           }).done(function (Response) {
-             console.log(Response);
+             //console.log(Response);
              if (Response) {
                 $('#Status_DeviceID').html(Response.DeviceID);
                 $('#Status_InstallDate').html(Response.InstallDate);
@@ -105,7 +105,7 @@
 
                 var PINS = atob(Response.PINS);
                 var PinConfig = PINS.split('|');
-                console.log(PinConfig);
+                //console.log(PinConfig);
                 $("#CoinslotCounterPIN   option[value='"+ PinConfig[0] +"']").prop('selected', true); 
                 $("#CoinslotEnablePIN    option[value='"+ PinConfig[1] +"']").prop('selected', true); 
                 $("#AdminPIN             option[value='"+ PinConfig[2] +"']").prop('selected', true); 
@@ -154,7 +154,7 @@
              url: Server, type: 'post', async: 'false', cache: false,
              data: { 'action':'getpins', 'TimeStamp':new Date().getTime() },
           }).done(function (Response) {
-             console.log("PINS From Server: ", Response); 
+             //console.log("PINS From Server: ", Response); 
              //if (Response=="ERROR") return false;
              var PinConfig = Response.split('|');
              //console.log(PinConfig);
@@ -184,7 +184,7 @@
              $('#ConfigSystemTeleChatID').val(),
              $('#ConfigSystemTeleBotID').val(),
           ]);
-          console.log(postData);
+          //console.log(postData);
           $.ajax({
              timeout:3000, //3 second timeout
              url: Server, type: 'post', async: 'false', cache: false,
@@ -205,7 +205,7 @@
                   $('#StatusLedPIN').val(),
                   $('#BuzzerPIN').val()
 	  ]);
-          console.log(postData);
+          //console.log(postData);
           $.ajax({
              timeout:3000, //3 second timeout
              url: Server, type: 'post', async: 'false', cache: false,
@@ -408,7 +408,7 @@ function saveRateMatrix(Matrix="") {
 
           setTimeout(function() { GetRateMatrix(); }, 3000); /**/
 
-          console.log('READY');
+          //console.log('READY');
        });
 
     </script>
