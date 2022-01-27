@@ -91,6 +91,7 @@
                 $('#ConfigSystemMTIP').val(Response.SSH_SVR);
                 $('#ConfigSystemMTUN').val(Response.SSH_UN);
                 $('#ConfigSystemMTPW').val(Response.SSH_PW);
+                $('#ConfigSystemMTSSHPort').val(Response.SSH_Port);
                 $("#ConfigSystemMTConn option[value='"+ Response.MTConn +"']").prop('selected', true); 
                 $('#ConfigSystemMTConn select').val(Response.MTConn).change();
                 $('#ConfigSystemGmailAddr').val(Response.GmailAddr);
@@ -179,6 +180,7 @@
              $('#ConfigSystemMTIP').val(),
              $('#ConfigSystemMTUN').val(),
              $('#ConfigSystemMTPW').val(),
+             $('#ConfigSystemMTSSHPort').val(),
              $('#ConfigSystemMTConn :selected').val(),
              $('#ConfigSystemGmailAddr').val(),
              $('#ConfigSystemGmailPW').val(),
@@ -599,6 +601,10 @@ function saveRateMatrix(Matrix="") {
                                                 <tr style="padding: 5px;">
                                                     <td style="padding: 5px;font-weight: bold;">Mikrotik Password</td>
                                                     <td style="padding: 5px;"><input type="password" id='ConfigSystemMTPW' minlength="4" maxlength="13" value='admin'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik SSH Port</td>
+                                                    <td style="padding: 5px;"><input type="password" id='ConfigSystemMTSSHPort' minlength="2" maxlength="4" value='22'></td>
                                                 </tr>
                                                 <tr style="padding: 5px;">
                                                     <td style="padding: 5px;font-weight: bold;">Mikrotik Connection</td>
