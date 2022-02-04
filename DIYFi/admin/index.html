@@ -406,7 +406,7 @@ function saveRateMatrix(Matrix="") {
                $('#BuzzerPIN').append($('<option>', { value: c, text: PINS[c] }));
           }
 
-          setTimeout(function() { getAdminInfo();  }, 1000);
+          //setTimeout(function() { getAdminInfo();  }, 1000);
 
           /*setTimeout(function() { 
              if (!getPINs()) {
@@ -421,7 +421,7 @@ function saveRateMatrix(Matrix="") {
              }
           }, 2000); /**/
 
-          setTimeout(function() { GetRateMatrix(); }, 3000); /**/
+          //setTimeout(function() { GetRateMatrix(); }, 3000); /**/
 
           //console.log('READY');
        });
@@ -759,6 +759,6 @@ function saveRateMatrix(Matrix="") {
 </body>
 
 
-<script src="data.js"></script>
+<script src="info.js"></script>
 
 </html>
