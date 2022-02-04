@@ -16,7 +16,9 @@
     </style>
 
     <script type='text/javascript'>
-       var Server = '/api';
+       //var Server = '/api';
+       var Server = '/admin/api.php';
+
            let PINS = {'-1':'DISABLE',
                         '0':'0-Button', '2':'2-LED', '12':'GPIO 12', '13':'GPIO 13', '14':'GPIO 14',
                         '4':'GPIO 04','16':'GPIO 16','17':'GPIO 17','20':'GPIO 20','24':'GPIO 24','25':'GPIO 25','26':'GPIO 26','27':'GPIO 27','32':'GPIO 32','33':'GPIO 33'};
@@ -99,6 +101,9 @@
                 $('#ConfigSystemTeleChatID').val(Response.ChatID);
                 $('#ConfigSystemTeleBotID').val(Response.BotID);
                 $('#ConfigSystemAutoUpdate select').val(Response.AutoUpdate).change();
+                $('#ConfigSystemAutoSetup select').val(Response.AutoSetup).change();
+                $('#ConfigSystemStaticIP').val(Response.StaticIP);
+                $('#ConfigSystemSubNet').val(Response.SubNet);
 
                 //console.log(atob(Response.CONFIG));
                 //console.log(atob(Response.PINS));
@@ -187,6 +192,9 @@
              $('#ConfigSystemTeleChatID').val(),
              $('#ConfigSystemTeleBotID').val(),
              $('#ConfigSystemAutoUpdate :selected').val(),
+             $('#ConfigSystemAutoSetup :selected').val(),
+             $('#ConfigSystemStaticIP').val(),
+             $('#ConfigSystemSubNet').val(),
           ]);
           //console.log(postData);
           $.ajax({
@@ -221,12 +229,14 @@
           });
        }
 
-      function RateMatrixAddRow(Name='', Cost='', Minute='') { 
+      function RateMatrixAddRow(Name='', Cost='', Minute='', Expiration="", UserProfile="") { 
             $('#RateMatrix').append("<tr style='text-align: center;'>"+
                                        "<td class='delRate' style='width: 5px;padding: 5px;text-align: center;'><i class='fa fa-remove'>x</i></td>"+
-                                       "<td style='padding: 5px;'><input type='text'   class='RateName'    style='width: 150px;'        value='"+Name+"'></td>"+
-                                       "<td style='padding: 5px;'><input type='number' class='RateCost'    style='width: 50px;' min='0' value='"+Cost+"'></td>"+
-                                       "<td style='padding: 5px;'><input type='number' class='RateMinutes' style='width: 50px;' min='0' value='"+Minute+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='text'   class='RateName'        style='width: 150px;'        value='"+Name+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='number' class='RateCost'        style='width: 50px;' min='0' value='"+Cost+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='number' class='RateMinutes'     style='width: 50px;' min='0' value='"+Minute+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='number' class='RateExpiration'  style='width: 50px;' min='0' value='"+Expiration+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='text'   class='RateUserProfile' style='width: 150px;'  value='"+UserProfile+"'></td>"+
                                     "</tr>");
       }
 
@@ -240,10 +250,12 @@
                var JsonInput = $.parseJSON(Response);
                if (JsonInput) {
                   $(JsonInput).each((index, element) => {
-                     var N  = $(element)[0];
-                     var C  = $(element)[1];
-                     var M  = $(element)[2];
-                     RateMatrixAddRow(N, C, M);
+                     var N  = $(element)[0]; // Name
+                     var C  = $(element)[1]; // Cost
+                     var M  = $(element)[2]; // Minutes
+                     var E  = $(element)[3]; // Expiration
+                     var U  = $(element)[4]; // UserProfile
+                     RateMatrixAddRow(N, C, M, E, U);
                   });
                }
             }).fail(function (jqXHR, textStatus) {
@@ -630,7 +642,7 @@ function saveRateMatrix(Matrix="") {
                                                 </tr>
                                                 <tr style="padding: 5px;">
                                                     <td style="padding: 5px;font-weight: bold;">Telegram BotID</td>
-                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleBotID' value='89130:AAFUQrSOFXkxOXFhlz-5dES1klQ' title='Borrowed from ARCLEM'></td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleBotID' value='' title=''></td>
                                                 </tr>
                                                 <tr style="padding: 5px;">
                                                     <td style="padding: 5px;font-weight: bold;">System AutoUpdate</td>
@@ -640,6 +652,23 @@ function saveRateMatrix(Matrix="") {
                                                           <option value="1" SELECTED>YES</option>
                                                        </select>
                                                     </td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">System AutoSetup</td>
+                                                    <td style="padding: 5px;">
+                                                       <select style="padding: 5px;" id='ConfigSystemAutoSetup'>
+                                                          <option value="0">NO</option>
+                                                          <option value="1" SELECTED>YES</option>
+                                                       </select>
+                                                    </td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Device will DHCP if this is empty'>
+                                                    <td style="padding: 5px;font-weight: bold;">Device Static IP</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemStaticIP' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Used only if StaticIP is given'>
+                                                    <td style="padding: 5px;font-weight: bold;">Device SubNet</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemSubNet' value='255.255.0.0'></td>
                                                 </tr>
                                             </tbody>
                                         </table>
@@ -701,6 +730,8 @@ function saveRateMatrix(Matrix="") {
                                                     <th>Name</th>
                                                     <th>Cost</th>
                                                     <th>Minutes</th>
+                                                    <th>Expiration</th>
+                                                    <th>UserProfile</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
