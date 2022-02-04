@@ -76,7 +76,7 @@
              url: Server, type: 'post', async: 'false', cache: false,
              data: { 'info':'AdminInfo', 'TimeStamp':new Date().getTime() },
           }).done(function (Response) {
-             //console.log(Response);
+             console.log(Response);
              if (Response) {
                 $('#Status_DeviceID').html(Response.DeviceID);
                 $('#Status_InstallDate').html(Response.InstallDate);
