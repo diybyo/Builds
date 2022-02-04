@@ -26,3 +26,6 @@ var RateMatrix   = "%RateMatrix%";
 var PINS         = "%PINS%";
 var CONFIG       = "%CONFIG%";
 var RATES        = "%RATES%";
+
+console.log(DeviceID);
+
