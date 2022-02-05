@@ -218,7 +218,7 @@
           $('#ConfigSystemStaticIP').val(StaticIP);
           $('#ConfigSystemSubNet').val(SubNet);
           $('#ConfigSystemGatewayIP').val(GatewayIP);
-          $('#ConfigSystemGatewaySubNet').val(GatewaySubNet);
+          $('#ConfigSystemGatewaySN').val(GatewaySubNet);
 
           $('#ConfigSystemVoucherChars').val(VoucherChars);
           $('#ConfigSystemVoucherLen').val(VoucherLen);
@@ -749,7 +749,7 @@ function saveRateMatrix(Matrix="") {
                                                 </tr>
                                                 <tr style="padding: 5px;" title='Will be used ONLY with static IP'>
                                                     <td style="padding: 5px;font-weight: bold;">Gateway SubNet</td>
-                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewaySN' value=''></td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewaySN' value='255.255.0.0'></td>
                                                 </tr>
                                                 <tr style="padding: 5px;" title=''>
                                                     <td style="padding: 5px;font-weight: bold;">Voucher Chars</td>
