@@ -1,4 +1,3 @@
-//console.log('abc');
 
 var DeviceID     = "%DeviceID%";
 var InstallDate  = "%InstallDate%";
@@ -22,43 +21,15 @@ var AutoUpdate   = "%AutoUpdate%";
 var AutoSetup    = "%AutoSetup%";
 var StaticIP     = "%StaticIP%";
 var SubNet       = "%SubNet%";
-var RateMatrix   = "%RateMatrix%";
+var VoucherChars = "%VoucherChars%";
+var VoucherLen   = "%VoucherLen%";
+
+var RateMatrix   = atob("%RateMatrix%");
 var DevicePINS   = "%PINS%";
 var DeviceCONFIG = "%CONFIG%";
 var DeviceRATES  = "%RATES%";
 
-//console.log(DeviceID);
-//console.log(InstallDate);
-//console.log(UpTime);
 
-$('#Status_DeviceID').html(DeviceID);
-$('#Status_InstallDate').html(InstallDate);
-$('#Status_Uptime').html(secondsToDhms(UpTime));
 
-$('#ConfigFirmware').html(FirmwareVer);
-$('#ConfigFirmwareCompileDate').html(CompileDate);
-$('#ConfigFirmwareType').html(ReleaseType);
-//$("#ConfigSystemLcdType option[value='"+ LCDType +"']").prop('selected', true); 
-$('#ConfigSystemLcdType select').val(LCDType).change();
-$('#ConfigSystemNickname').val(NickName);
 
-$('#ConfigSystemSSID').val(SSID);
-$('#ConfigSystemMTIP').val(SSH_SVR);
-$('#ConfigSystemMTUN').val(SSH_UN);
-$('#ConfigSystemMTPW').val(SSH_PW);
-$('#ConfigSystemMTSSHPort').val(SSH_Port);
-//$("#ConfigSystemMTConn option[value='"+ MTConn +"']").prop('selected', true); 
-$('#ConfigSystemMTConn select').val(MTConn).change();
-$('#ConfigSystemGmailAddr').val(GmailAddr);
-$('#ConfigSystemGmailPW').val(GmailPW);
-$('#ConfigSystemTeleChatID').val(ChatID);
-$('#ConfigSystemTeleBotID').val(BotID);
-$('#ConfigSystemAutoUpdate select').val(AutoUpdate).change();
-$('#ConfigSystemAutoSetup select').val(AutoSetup).change();
-$('#ConfigSystemStaticIP').val(StaticIP);
-$('#ConfigSystemSubNet').val(SubNet);
 
-console.log(atob(RateMatrix));
-console.log(atob(DevicePINS));
-console.log(atob(DeviceCONFIG));
-console.log(atob(DeviceRATES));

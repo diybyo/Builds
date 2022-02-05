@@ -9,6 +9,7 @@
     <script src="bootstrap.min.js"></script>
     <script src="jquery.alphanumeric.pack.js"></script>
 
+
     <link rel="stylesheet" href="bootstrap.min.css">
 
     <style>
@@ -20,7 +21,8 @@
 
            let PINS = {'-1':'DISABLE',
                         '0':'0-Button', '2':'2-LED', '12':'GPIO 12', '13':'GPIO 13', '14':'GPIO 14',
-                        '4':'GPIO 04','16':'GPIO 16','17':'GPIO 17','20':'GPIO 20','24':'GPIO 24','25':'GPIO 25','26':'GPIO 26','27':'GPIO 27','32':'GPIO 32','33':'GPIO 33'};
+                        '4':'GPIO 04','16':'GPIO 16','17':'GPIO 17','20':'GPIO 20','24':'GPIO 24','25':'GPIO 25','26':'GPIO 26','27':'GPIO 27','32':'GPIO 32','33':'GPIO 33',
+                        '15':'GPIO 15','37':'GPIO 37','38':'GPIO 38',};
 
        function secondsToDhms(seconds) {
           seconds = Number(seconds);
@@ -34,6 +36,14 @@
           var mDisplay = m > 0 ? m + (m == 1 ? " Min " : " Mins ") : "0 Min ";
           var sDisplay = s > 0 ? s + (s == 1 ? " Sec" : " Secs") : "0 Sec ";
           return dDisplay + hDisplay + mDisplay + sDisplay;
+       }
+
+       var NodeUpTime = 0;
+       function ShowUpTimeClock(){
+          var Display = secondsToDhms(NodeUpTime++);
+          $('#Status_Uptime').html(Display);
+          mytime=setTimeout('ShowUpTimeClock()', 1000)
+          //console.log(NodeUpTime);
        }
 
        function ConcatPins(PinArray){
@@ -103,6 +113,9 @@
                 $('#ConfigSystemAutoSetup select').val(Response.AutoSetup).change();
                 $('#ConfigSystemStaticIP').val(Response.StaticIP);
                 $('#ConfigSystemSubNet').val(Response.SubNet);
+
+                $('#ConfigSystemVoucherChars').val(Response.VoucherChars);
+                $('#ConfigSystemVoucherLen').val(Response.VoucherLen);
 
                 //console.log(atob(Response.CONFIG));
                 //console.log(atob(Response.PINS));
@@ -176,6 +189,68 @@
           });
        }
 
+       function applyCONFIG() {
+          $('#Status_DeviceID').html(DeviceID);
+          $('#Status_InstallDate').html(InstallDate);
+          NodeUpTime = UpTime;
+          $('#Status_Uptime').html(secondsToDhms(UpTime));
+
+          $('#ConfigFirmware').html(FirmwareVer);
+          $('#ConfigFirmwareCompileDate').html(CompileDate);
+          $('#ConfigFirmwareType').html(ReleaseType);
+          //$("#ConfigSystemLcdType option[value='"+ LCDType +"']").prop('selected', true); 
+          $('#ConfigSystemLcdType select').val(LCDType).change();
+          $('#ConfigSystemNickname').val(NickName);
+
+          $('#ConfigSystemSSID').val(SSID);
+          $('#ConfigSystemMTIP').val(SSH_SVR);
+          $('#ConfigSystemMTUN').val(SSH_UN);
+          $('#ConfigSystemMTPW').val(SSH_PW);
+          $('#ConfigSystemMTSSHPort').val(SSH_Port);
+          //$("#ConfigSystemMTConn option[value='"+ MTConn +"']").prop('selected', true); 
+          $('#ConfigSystemMTConn select').val(MTConn).change();
+          $('#ConfigSystemGmailAddr').val(GmailAddr);
+          $('#ConfigSystemGmailPW').val(GmailPW);
+          $('#ConfigSystemTeleChatID').val(ChatID);
+          $('#ConfigSystemTeleBotID').val(BotID);
+          $('#ConfigSystemAutoUpdate select').val(AutoUpdate).change();
+          $('#ConfigSystemAutoSetup select').val(AutoSetup).change();
+          $('#ConfigSystemStaticIP').val(StaticIP);
+          $('#ConfigSystemSubNet').val(SubNet);
+
+          $('#ConfigSystemVoucherChars').val(VoucherChars);
+          $('#ConfigSystemVoucherLen').val(VoucherLen);
+       }
+
+       function setupRATES(RATES) {
+          //console.log(RATES);
+          var JsonInput = JSON.parse(RATES);
+          //console.log(JsonInput);
+          if (JsonInput) {
+             $(JsonInput).each((index, element) => {
+                var N  = $(element)[0]; // Name
+                var C  = $(element)[1]; // Cost
+                var M  = $(element)[2]; // Minutes
+                var E  = $(element)[3]; // Expiration
+                var U  = $(element)[4]; // UserProfile
+                RateMatrixAddRow(N, C, M, E, U);
+             });
+          } /**/
+       }
+
+       function setupPINs(PINS) {
+             //console.log("PINS : ", PINS); 
+             var PinConfig = PINS.split('|');
+             //console.log(PinConfig);
+
+             $("#CoinslotCounterPIN   option[value='"+ PinConfig[0] +"']").attr('selected', true);
+             $("#CoinslotEnablePIN    option[value='"+ PinConfig[1] +"']").prop('selected', true); 
+             $("#AdminPIN             option[value='"+ PinConfig[2] +"']").prop('selected', true); 
+             $("#ClientPushButtonPIN  option[value='"+ PinConfig[3] +"']").prop('selected', true); 
+             $("#StatusLedPIN         option[value='"+ PinConfig[4] +"']").prop('selected', true); 
+             $("#BuzzerPIN            option[value='"+ PinConfig[5] +"']").prop('selected', true); 
+       }
+
        function saveSystemConfig() {
           var postData = ConcatPins([
              $('#ConfigSystemLcdType :selected').val(),
@@ -194,6 +269,8 @@
              $('#ConfigSystemAutoSetup :selected').val(),
              $('#ConfigSystemStaticIP').val(),
              $('#ConfigSystemSubNet').val(),
+             $('#ConfigSystemVoucherChars').val(),
+             $('#ConfigSystemVoucherLen').val(),
           ]);
           //console.log(postData);
           $.ajax({
@@ -393,9 +470,13 @@ function saveRateMatrix(Matrix="") {
                      alert("ERROR device not responding.");
                }); 
          });
+    </script>
 
+    <script src="info.js"></script>
 
+<script>
        $(document).ready(function(){
+          // Fill-up options
           for(let c in PINS){
                //console.log(c , " " , PINS[c]);
                $('#CoinslotCounterPIN').append($('<option>', { value: c, text: PINS[c] }));
@@ -406,27 +487,16 @@ function saveRateMatrix(Matrix="") {
                $('#BuzzerPIN').append($('<option>', { value: c, text: PINS[c] }));
           }
 
-          //setTimeout(function() { getAdminInfo();  }, 1000);
+          // Show selected
+          setupPINs(DevicePINS);
+          setupRATES(DeviceRATES);
+          applyCONFIG();
 
-          /*setTimeout(function() { 
-             if (!getPINs()) {
-                // Assume PIN assignment. In prod, you can get the values from config and then set it here...
-                var DisablePinIndex = 13; // if you change the PINS definition above, be sure to change this also
-                $('#CoinslotCounterPIN').prop('selectedIndex', DisablePinIndex);
-                $('#CoinslotEnablePIN').prop('selectedIndex', DisablePinIndex);
-                $('#AdminPIN').prop('selectedIndex', DisablePinIndex);
-                $('#ClientPushButtonPIN').prop('selectedIndex', DisablePinIndex);
-                $('#StatusLedPIN').prop('selectedIndex', DisablePinIndex);
-                $('#BuzzerPIN').prop('selectedIndex', DisablePinIndex);
-             }
-          }, 2000); /**/
+          ShowUpTimeClock();
 
-          //setTimeout(function() { GetRateMatrix(); }, 3000); /**/
-
-          //console.log('READY');
        });
+</script>
 
-    </script>
 </head>
 
 <body class="text-left d-flex">
@@ -669,7 +739,14 @@ function saveRateMatrix(Matrix="") {
                                                     <td style="padding: 5px;font-weight: bold;">Device SubNet</td>
                                                     <td style="padding: 5px;"><input type="text" id='ConfigSystemSubNet' value='255.255.0.0'></td>
                                                 </tr>
-                                            </tbody>
+                                                <tr style="padding: 5px;" title=''>
+                                                    <td style="padding: 5px;font-weight: bold;">Voucher Chars</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemVoucherChars' value='BCDFGHJKLNPRSTVWZAEUbcdfghjknprstvwzaeiou0123456789'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title=''>
+                                                    <td style="padding: 5px;font-weight: bold;">Voucher Length</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemVoucherLen' value='8'></td>
+                                                </tr>                                            </tbody>
                                         </table>
                                     </div><button class="btn btn-primary" id="ConfigSystemSave" type="button">SAVE</button>
                                 </div>
@@ -758,7 +835,5 @@ function saveRateMatrix(Matrix="") {
     </div>
 </body>
 
-
-<script src="info.js"></script>
 
 </html>
