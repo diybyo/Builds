@@ -217,6 +217,8 @@
           $('#ConfigSystemAutoSetup select').val(AutoSetup).change();
           $('#ConfigSystemStaticIP').val(StaticIP);
           $('#ConfigSystemSubNet').val(SubNet);
+          $('#ConfigSystemGatewayIP').val(GatewayIP);
+          $('#ConfigSystemGatewaySubNet').val(GatewaySubNet);
 
           $('#ConfigSystemVoucherChars').val(VoucherChars);
           $('#ConfigSystemVoucherLen').val(VoucherLen);
@@ -269,6 +271,8 @@
              $('#ConfigSystemAutoSetup :selected').val(),
              $('#ConfigSystemStaticIP').val(),
              $('#ConfigSystemSubNet').val(),
+             $('#ConfigSystemGatewayIP').val(),
+             $('#ConfigSystemGatewaySubNet').val(),
              $('#ConfigSystemVoucherChars').val(),
              $('#ConfigSystemVoucherLen').val(),
           ]);
@@ -738,6 +742,14 @@ function saveRateMatrix(Matrix="") {
                                                 <tr style="padding: 5px;" title='Used only if StaticIP is given'>
                                                     <td style="padding: 5px;font-weight: bold;">Device SubNet</td>
                                                     <td style="padding: 5px;"><input type="text" id='ConfigSystemSubNet' value='255.255.0.0'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Will be used ONLY with static IP'>
+                                                    <td style="padding: 5px;font-weight: bold;">Gateway IP</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewayIP' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Will be used ONLY with static IP'>
+                                                    <td style="padding: 5px;font-weight: bold;">Gateway SubNet</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewaySN' value=''></td>
                                                 </tr>
                                                 <tr style="padding: 5px;" title=''>
                                                     <td style="padding: 5px;font-weight: bold;">Voucher Chars</td>

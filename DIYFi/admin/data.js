@@ -21,6 +21,8 @@ var AutoUpdate   = "%AutoUpdate%";
 var AutoSetup    = "%AutoSetup%";
 var StaticIP     = "%StaticIP%";
 var SubNet       = "%SubNet%";
+var GatewayIP     = "%GatewayIP%";
+var GatewaySubNet = "%GatewaySubNet%";
 var VoucherChars = "%VoucherChars%";
 var VoucherLen   = "%VoucherLen%";
 
