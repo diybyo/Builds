@@ -80,115 +80,6 @@
           return true;
       }
 
-       function getAdminInfo() {
-          $.ajax({
-             timeout:3000, //3 second timeout
-             url: Server, type: 'post', async: 'false', cache: false,
-             data: { 'info':'AdminInfo', 'TimeStamp':new Date().getTime() },
-          }).done(function (Response) {
-             console.log(Response);
-             if (Response) {
-                $('#Status_DeviceID').html(Response.DeviceID);
-                $('#Status_InstallDate').html(Response.InstallDate);
-                $('#Status_Uptime').html(secondsToDhms(Response.UpTime));
-                $('#ConfigFirmware').html(Response.FirmwareVer);
-                $('#ConfigFirmwareCompileDate').html(Response.CompileDate);
-                $('#ConfigFirmwareType').html(Response.ReleaseType);
-                $("#ConfigSystemLcdType option[value='"+ Response.LCDType +"']").prop('selected', true); 
-                $('#ConfigSystemLcdType select').val(Response.LCDType).change();
-                $('#ConfigSystemNickname').val(Response.NickName);
-
-                $('#ConfigSystemSSID').val(Response.SSID);
-                $('#ConfigSystemMTIP').val(Response.SSH_SVR);
-                $('#ConfigSystemMTUN').val(Response.SSH_UN);
-                $('#ConfigSystemMTPW').val(Response.SSH_PW);
-                $('#ConfigSystemMTSSHPort').val(Response.SSH_Port);
-                $("#ConfigSystemMTConn option[value='"+ Response.MTConn +"']").prop('selected', true); 
-                $('#ConfigSystemMTConn select').val(Response.MTConn).change();
-                $('#ConfigSystemGmailAddr').val(Response.GmailAddr);
-                $('#ConfigSystemGmailPW').val(Response.GmailPW);
-                $('#ConfigSystemTeleChatID').val(Response.ChatID);
-                $('#ConfigSystemTeleBotID').val(Response.BotID);
-                $('#ConfigSystemAutoUpdate select').val(Response.AutoUpdate).change();
-                $('#ConfigSystemAutoSetup select').val(Response.AutoSetup).change();
-                $('#ConfigSystemStaticIP').val(Response.StaticIP);
-                $('#ConfigSystemSubNet').val(Response.SubNet);
-
-                $('#ConfigSystemVoucherChars').val(Response.VoucherChars);
-                $('#ConfigSystemVoucherLen').val(Response.VoucherLen);
-
-                //console.log(atob(Response.CONFIG));
-                //console.log(atob(Response.PINS));
-                //console.log(atob(Response.RATES));
-                //console.log(atob(Response.CONFIG));
-
-                var PINS = atob(Response.PINS);
-                var PinConfig = PINS.split('|');
-                //console.log(PinConfig);
-                $("#CoinslotCounterPIN   option[value='"+ PinConfig[0] +"']").prop('selected', true); 
-                $("#CoinslotEnablePIN    option[value='"+ PinConfig[1] +"']").prop('selected', true); 
-                $("#AdminPIN             option[value='"+ PinConfig[2] +"']").prop('selected', true); 
-                $("#ClientPushButtonPIN  option[value='"+ PinConfig[3] +"']").prop('selected', true); 
-                $("#StatusLedPIN         option[value='"+ PinConfig[4] +"']").prop('selected', true); 
-                $("#BuzzerPIN            option[value='"+ PinConfig[5] +"']").prop('selected', true); 
-
-             }
-          }).fail(function (jqXHR, textStatus) {
-             $('#'+id).html('');
-             if (textStatus === 'timeout') { alert('Failed from timeout'); }
-          });
-       }
-
-       function getInfo(info, id, type) {
-          $.ajax({
-             timeout:3000, //3 second timeout
-             url: Server, type: 'post', async: 'false', cache: false,
-             data: { 'info':info, 'TimeStamp':new Date().getTime() },
-          }).done(function (Response) {
-             if (type=='textbox') {
-                $('#'+id).val(Response);
-             }
-             else if (type=='select') {
-                //console.log("select: "+Response);
-                $("#"+id+" option[value='"+Response+"']").prop('selected', true); 
-                $('#'+id+' select').val(Response).change();
-             }
-             else {
-                if (info=="Uptime") {
-                   $('#'+id).html(secondsToDhms(Response));
-                }
-                else {
-                   $('#'+id).html(Response);
-                }
-             }
-          }).fail(function (jqXHR, textStatus) {
-             $('#'+id).html('');
-             if (textStatus === 'timeout') { alert('Failed from timeout'); }
-          });
-       }
-
-       function getPINs() {
-          $.ajax({
-             timeout:3000, //3 second timeout
-             url: Server, type: 'post', async: 'false', cache: false,
-             data: { 'action':'getpins', 'TimeStamp':new Date().getTime() },
-          }).done(function (Response) {
-             //console.log("PINS From Server: ", Response); 
-             //if (Response=="ERROR") return false;
-             var PinConfig = Response.split('|');
-             //console.log(PinConfig);
-             $("#CoinslotCounterPIN   option[value='"+ PinConfig[0] +"']").prop('selected', true); 
-             $("#CoinslotEnablePIN    option[value='"+ PinConfig[1] +"']").prop('selected', true); 
-             $("#AdminPIN             option[value='"+ PinConfig[2] +"']").prop('selected', true); 
-             $("#ClientPushButtonPIN  option[value='"+ PinConfig[3] +"']").prop('selected', true); 
-             $("#StatusLedPIN         option[value='"+ PinConfig[4] +"']").prop('selected', true); 
-             $("#BuzzerPIN            option[value='"+ PinConfig[5] +"']").prop('selected', true); 
-             return true;
-          }).fail(function (jqXHR, textStatus) {
-             return false;
-          });
-       }
-
        function applyCONFIG() {
           $('#Status_DeviceID').html(DeviceID);
           $('#Status_InstallDate').html(InstallDate);
@@ -747,7 +638,7 @@ function saveRateMatrix(Matrix="") {
                                                     <td style="padding: 5px;font-weight: bold;">Gateway IP</td>
                                                     <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewayIP' value=''></td>
                                                 </tr>
-                                                <tr style="padding: 5px;" title='Will be used ONLY with static IP'>
+                                                <tr style="padding: 5px; display:none" title='Will be used ONLY with static IP'>
                                                     <td style="padding: 5px;font-weight: bold;">Gateway SubNet</td>
                                                     <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewaySN' value='255.255.0.0'></td>
                                                 </tr>
