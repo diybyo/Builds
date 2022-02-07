@@ -25,6 +25,9 @@ var GatewayIP     = "%GatewayIP%";
 var GatewaySubNet = "%GatewaySubNet%";
 var VoucherChars = "%VoucherChars%";
 var VoucherLen   = "%VoucherLen%";
+var DevAdminUN   = "%DevAdminUN%";
+var DevAdminPW   = "%DevAdminPW%";
+var HotspotSvr   = "%HotspotSvr%";
 
 var RateMatrix   = atob("%RateMatrix%");
 var DevicePINS   = "%PINS%";

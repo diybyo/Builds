@@ -113,6 +113,11 @@
 
           $('#ConfigSystemVoucherChars').val(VoucherChars);
           $('#ConfigSystemVoucherLen').val(VoucherLen);
+
+          $('#ConfigDevAdminUN').val(DevAdminUN);
+          $('#ConfigDevAdminPW').val(DevAdminPW);
+          $('#ConfigHotspotServerName').val(HotspotSvr);
+
        }
 
        function setupRATES(RATES) {
@@ -166,6 +171,9 @@
              $('#ConfigSystemGatewaySubNet').val(),
              $('#ConfigSystemVoucherChars').val(),
              $('#ConfigSystemVoucherLen').val(),
+             $('#ConfigDevAdminUN').val(),
+             $('#ConfigDevAdminPW').val(),
+             $('#ConfigHotspotServerName').val(),
           ]);
           //console.log(postData);
           $.ajax({
@@ -599,7 +607,6 @@ function saveRateMatrix(Matrix="") {
                                                     <td style="padding: 5px;font-weight: bold;">gMail Password</td>
                                                     <td style="padding: 5px;"><input type="password" id='ConfigSystemGmailPW' value=''></td>
                                                 </tr>
-
                                                 <tr style="padding: 5px;">
                                                     <td style="padding: 5px;font-weight: bold;">Telegram ChatID</td>
                                                     <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleChatID' value=''></td>
@@ -649,7 +656,20 @@ function saveRateMatrix(Matrix="") {
                                                 <tr style="padding: 5px;" title=''>
                                                     <td style="padding: 5px;font-weight: bold;">Voucher Length</td>
                                                     <td style="padding: 5px;"><input type="text" id='ConfigSystemVoucherLen' value='8'></td>
-                                                </tr>                                            </tbody>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">DeviceAdmin UserName</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigDevAdminUN' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px; 5px;font-weight: bold;">
+                                                    <td style="padding: 5px;font-weight: bold;">DeviceAdmin Password</td>
+                                                    <td style="padding: 5px;"><input type="password" id='ConfigDevAdminPW' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">HotSpot ServerName</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigHotspotServerName' value=''></td>
+                                                </tr>
+                                            </tbody>
                                         </table>
                                     </div><button class="btn btn-primary" id="ConfigSystemSave" type="button">SAVE</button>
                                 </div>
