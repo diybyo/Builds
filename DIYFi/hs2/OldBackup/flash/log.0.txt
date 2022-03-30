@@ -1,0 +1,43 @@
+Feb/20/2022 12:47:45 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by http-chap
+Feb/20/2022 12:47:46 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:48:37 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:48:38 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:48:38 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:48:39 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:48:41 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:48:41 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:48:43 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:48:47 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:48:47 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:48:50 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:48:53 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:48:53 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:48:56 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:48:59 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:48:59 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:49:07 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:49:10 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:49:10 hotspot,account,info,debug ->: cnb8on (10.0.0.253): logged in
+Feb/20/2022 12:49:30 hotspot,info,debug ->: cnb8on (10.0.0.253): logged out: user request
+Feb/20/2022 12:49:30 hotspot,error,info,debug ->: cnb8on (10.0.0.253): stop accounting: local user not found
+Feb/20/2022 12:49:32 hotspot,info,debug ->: cnb8on (10.0.0.253): trying to log in by cookie
+Feb/20/2022 12:49:32 hotspot,info,debug ->: cnb8on (10.0.0.253): login failed: invalid username or password
+Feb/20/2022 17:09:34 hotspot,info,debug ->: b58pbj (10.0.0.253): trying to log in by http-chap
+Feb/20/2022 17:09:34 hotspot,account,info,debug ->: b58pbj (10.0.0.253): logged in
+Feb/20/2022 17:09:35 hotspot,info,debug ->: b58pbj (10.0.0.253): logged out: user request
+Feb/20/2022 17:09:36 hotspot,info,debug ->: b58pbj (10.0.0.253): trying to log in by cookie
+Feb/20/2022 17:09:36 hotspot,account,info,debug ->: b58pbj (10.0.0.253): logged in
+Feb/20/2022 17:09:37 hotspot,info,debug ->: b58pbj (10.0.0.253): logged out: user request
+Feb/20/2022 17:09:38 hotspot,info,debug ->: b58pbj (10.0.0.253): trying to log in by cookie
+Feb/20/2022 17:09:38 hotspot,account,info,debug ->: b58pbj (10.0.0.253): logged in
+Feb/20/2022 17:09:40 hotspot,info,debug ->: b58pbj (10.0.0.253): logged out: user request
+Feb/20/2022 17:09:41 hotspot,info,debug ->: b58pbj (10.0.0.253): trying to log in by cookie
+Feb/20/2022 17:09:41 hotspot,account,info,debug ->: b58pbj (10.0.0.253): logged in
+Feb/20/2022 17:09:46 hotspot,info,debug ->: b58pbj (10.0.0.253): logged out: user request
+Feb/20/2022 17:09:50 hotspot,info,debug ->: b58pbj (10.0.0.253): trying to log in by cookie
+Feb/20/2022 17:09:50 hotspot,account,info,debug ->: b58pbj (10.0.0.253): logged in
+Feb/20/2022 17:12:18 hotspot,info,debug ->: b58pbj (10.0.0.253): logged out: keepalive timeout
+Feb/21/2022 17:45:06 hotspot,info,debug ->: b58pbj (10.0.0.254): trying to log in by mac-cookie
+Feb/21/2022 17:45:06 hotspot,account,info,debug ->: b58pbj (10.0.0.254): logged in
+Feb/21/2022 17:45:23 hotspot,info,debug ->: 1C:4D:70:5C:7A:92 (10.0.0.253): trying to log in by mac
+Feb/21/2022 17:45:23 hotspot,info,debug ->: 1C:4D:70:5C:7A:92 (10.0.0.253): login failed: invalid username or password

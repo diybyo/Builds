@@ -1,0 +1,35 @@
+var DeviceID     = "BSTEFC393005613C";
+var InstallDate  = "2022-02-08 14:00:59";
+var UpTime       = "14";
+var FirmwareVer  = "0.0.1i3";
+var CompileDate  = "Feb 11 2022 09:39:49";
+var ReleaseType  = "BSTE";
+var NickName     = "BSTEFC393005613C";
+var LCDType      = "0";
+var SSID         = "TestWIFI";
+var SSH_SVR      = "10.0.0.1";
+var SSH_UN       = "admin";
+var SSH_PW       = "admin";
+var SSH_Port     = "22";
+var MTConn       = "KA";
+var GmailAddr    = "";
+var GmailPW      = "";
+var ChatID       = "";
+var BotID        = "";
+var AutoUpdate   = "0";
+var AutoSetup    = "0";
+var StaticIP     = "";
+var SubNet       = "255.255.0.0";
+var GatewayIP     = "10.0.0.1";
+var GatewaySubNet = "255.255.0.0";
+var VoucherChars = "bcdfghjknprstvwzaeiou0123456789";
+var VoucherLen   = "6";
+var DevAdminUN   = "admin";
+var DevAdminPW   = "admin";
+var HotspotSvr   = "hotspot1";
+
+var RateMatrix   = atob("PHRhYmxlIGJvcmRlcj0nMScgd2lkdGg9JzEwMCUnIGNsYXNzPSd6dWktdGFibGUnPgo8dHI+PHRoIENvbFNwYW49JzQnPkJTVEVGQzM5MzAwNTYxM0MgLyBCU1RFRkMzOTMwMDU2MTNDPC90aD48L3RyPjx0cj48dGg+PC90aD48dGg+Q29zdDwvdGg+PHRoPk1pbnV0ZXM8L3RoPjwvdHI+PHRyPjx0aD5SYXRlMTwvdGg+PHRkPiAgMTwvdGQ+PHRkPiAgMTwvdGQ+PC90cj4KPHRyPjx0aD5SYXRlMjwvdGg+PHRkPiAgNTwvdGQ+PHRkPiAgNTwvdGQ+PC90cj4KPHRyPjx0aD5SYXRlMzwvdGg+PHRkPiAxMDwvdGQ+PHRkPiAxMDwvdGQ+PC90cj4KPHRyPjx0aD5SYXRlNDwvdGg+PHRkPiAyMDwvdGQ+PHRkPiAyMDwvdGQ+PC90cj4KPHRyPjx0aD5SYXRlNTwvdGg+PHRkPiA1MDwvdGQ+PHRkPiA1MDwvdGQ+PC90cj4KPC90YWJsZT4K");
+var DevicePINS   = "12|13|0|14|2|-1|-1|-1";
+var DeviceCONFIG = "0|BSTEFC393005613C|TestWIFI|10.0.0.1|admin|admin|22|KA|||||0|0||255.255.0.0|10.0.0.1|255.255.0.0|bcdfghjknprstvwzaeiou0123456789|6|admin|admin|hotspot1";
+var DeviceRATES  = "[[\"Rate1\",\"1\",\"1\",\"1\",\"default\"],[\"Rate2\",\"5\",\"5\",\"5\",\"default\"],[\"Rate3\",\"10\",\"10\",\"10\",\"default\"],[\"Rate4\",\"20\",\"20\",\"20\",\"default\"],[\"Rate5\",\"50\",\"50\",\"50\",\"default\"]]";
+

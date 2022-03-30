@@ -1,0 +1,45 @@
+#overlay {
+  position: fixed;
+  padding: 0;
+  margin: 0;
+  top: 0px;
+  left: 0px;
+  z-index: 1000;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
+}
+
+.btn-close {
+  display: none;
+}
+
+.toast-container {
+  z-index: 1000;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+.ticker {
+  display: flex;
+  flex-wrap: wrap;
+  height: 50px;
+  margin: 0 auto;
+}
+
+.news {
+  background: #E5E5E5;
+  padding: 0 2%;
+}
+
+.news marquee {
+  font-size: 18px;
+  margin-top: 12px;
+}
+
+.news-content p {
+  margin-right: 41px;
+  display: inline;
+}
+

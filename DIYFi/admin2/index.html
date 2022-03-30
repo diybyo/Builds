@@ -1,0 +1,1051 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>DeviceAdmin</title><title>Success</title>
+
+    <script src="jquery.min.js"></script>
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <script src="info.js"></script>
+
+    <style>
+       .zebra tbody tr:nth-child(odd) { background-color: rgba(0,0,0,.03); }
+
+.spinner { 
+    position: fixed; 
+    z-index: 99; 
+    opacity: 90%; display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100%; 
+    background: white; 
+    top: 0; 
+    left: 0; 
+    width: 100%; 
+} 
+
+#MainDiv {
+   display: none;
+}
+    </style>
+
+    <script type='text/javascript'>
+// https://stackoverflow.com/questions/17883692/how-to-set-time-delay-in-javascript
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
+// https://stackoverflow.com/questions/49050401/lazy-load-javascript-file
+    function addCSS(filename) {
+        //console.log("inserting: ", filename);
+        var head = document.getElementsByTagName('head')[0];
+
+        var style = document.createElement('link');
+        style.href = filename;
+        style.type = 'text/css';
+        style.rel = 'stylesheet';
+        head.appendChild(style);
+    }
+
+    function addScript(filename) {
+        //console.log("inserting: ", filename);
+        var head = document.getElementsByTagName('head')[0];
+
+        var script = document.createElement('script');
+        script.src = filename;
+        script.type = 'text/javascript';
+
+        head.insertBefore(script, document.getElementsByTagName("script")[0]);
+    }
+
+    function addFavicon(filename) {
+        //console.log("inserting: ", filename);
+        var link = document.createElement('link');
+        link.id = 'favicon';
+        link.type = 'image/x-icon'
+        link.rel = 'icon';
+        link.href = filename;
+        //link.href = new_favicon_url +'?=' + Math.random();
+
+        var head = document.getElementsByTagName('head')[0];
+        head.appendChild(link);
+        //document.head.appendChild(link);
+    }
+
+// https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
+// https://koddsson.com/posts/emoji-favicon/
+function changeFavicon(text) { // changeFavicon('❤️'); <link rel="icon" value="🍕" /> 😁 📶
+  const canvas = document.createElement('canvas');
+  canvas.height = 64;
+  canvas.width = 64;
+  const ctx = canvas.getContext('2d');
+  ctx.font = '64px serif';
+  ctx.fillText(text, 0, 64);
+
+  const link = document.createElement('link');
+  const oldLinks = document.querySelectorAll('link[rel="shortcut icon"]');
+  oldLinks.forEach(e => e.parentNode.removeChild(e));
+  link.id = 'dynamic-favicon';
+  link.rel = 'shortcut icon';
+  link.href = canvas.toDataURL();
+  document.head.appendChild(link);
+}
+
+       var Server = 'api.php';
+
+           let PINS = {'-1':'DISABLE',
+                        '0':'0-Button', '2':'2-LED', '12':'GPIO 12', '13':'GPIO 13', '14':'GPIO 14',
+                        '4':'GPIO 04','16':'GPIO 16','17':'GPIO 17','20':'GPIO 20','24':'GPIO 24','25':'GPIO 25','26':'GPIO 26','27':'GPIO 27','32':'GPIO 32','33':'GPIO 33',
+                        '15':'GPIO 15','37':'GPIO 37','38':'GPIO 38',};
+
+           let RATES = {'REGULAR':'Regular', 'PROMO1':'Promo1', 'PROMO2':'Promo2', 'SPECIAL1':'Special1', 'SPECIAL2':'Special2', };
+
+           var RatesLineCounter = 0;
+
+       function secondsToDhms(seconds) {
+          seconds = Number(seconds);
+          var d = Math.floor(seconds / (3600*24));
+          var h = Math.floor(seconds % (3600*24) / 3600);
+          var m = Math.floor(seconds % 3600 / 60);
+          var s = Math.floor(seconds % 60);
+
+          var dDisplay = d > 0 ? d + (d == 1 ? " Day " : " Days ") : "0 Day ";
+          var hDisplay = h > 0 ? h + (h == 1 ? " Hour " : " Hours ") : "0 Hour ";
+          var mDisplay = m > 0 ? m + (m == 1 ? " Min " : " Mins ") : "0 Min ";
+          var sDisplay = s > 0 ? s + (s == 1 ? " Sec" : " Secs") : "0 Sec ";
+          return dDisplay + hDisplay + mDisplay + sDisplay;
+       }
+
+       var NodeUpTime = 0;
+       function ShowUpTimeClock(){
+          var Display = secondsToDhms(NodeUpTime++);
+          $('#Status_Uptime').html(Display);
+          mytime=setTimeout('ShowUpTimeClock()', 1000)
+          //console.log(NodeUpTime);
+       }
+
+       function ConcatPins(PinArray){
+          var data = "";
+          for(var i=0; i<PinArray.length; i++) {
+             if (i>0) data += '|';
+             data += PinArray[i];
+          }
+          return (data); // encodeURI(data);
+       }
+
+       function ValidatePinMap() {
+          var pinMap = [];
+          pinMap[$('#CoinslotCounterPIN').attr('name')]  = $('#CoinslotCounterPIN').val();
+          pinMap[$('#CoinslotEnablePIN').attr('name')]   = $('#CoinslotEnablePIN').val();
+          pinMap[$('#AdminPIN').attr('name')]            = $('#AdminPIN').val();
+          pinMap[$('#ClientPushButtonPIN').attr('name')] = $('#ClientPushButtonPIN').val();
+          pinMap[$('#StatusLedPIN').attr('name')]        = $('#StatusLedPIN').val();
+          pinMap[$('#BuzzerPIN').attr('name')]           = $('#BuzzerPIN').val();
+          for (var i in pinMap) {
+             for (var j in pinMap) {
+                if (i != j) {
+                   if ((pinMap[i] == pinMap[j]) && (pinMap[i] != -1)) {
+                      var PinValue    = pinMap[i];
+                      var PinName     = PINS[PinValue];
+                      //console.log(i); console.log(j);
+                      var Reply = PinName + ' is already used by ' + i;
+                      alert(Reply);
+                      return false;
+                   }
+                }
+             }
+          }
+          return true;
+      }
+
+       function applyCONFIG() {
+          $('#Status_DeviceID').html(DeviceID);
+          $('#Status_InstallDate').html(InstallDate);
+          NodeUpTime = UpTime;
+          $('#Status_Uptime').html(secondsToDhms(UpTime));
+
+          $('#ConfigFirmware').html(FirmwareVer);
+          $('#ConfigFirmwareCompileDate').html(CompileDate);
+          $('#ConfigFirmwareType').html(ReleaseType);
+          //$("#ConfigSystemLcdType option[value='"+ LCDType +"']").prop('selected', true); 
+          $('#ConfigSystemLcdType select').val(LCDType).change();
+          $('#ConfigSystemNickname').val(NickName);
+
+          $('#ConfigSystemSSID').val(SSID);
+          $('#ConfigSystemSSIDPW').val(SSID_PW),
+          $('#ConfigSystemMTIP').val(SSH_SVR);
+          $('#ConfigSystemMTSSHPort').val(SSH_Port);
+          $('#ConfigSystemMTUN').val(SSH_UN);
+          $('#ConfigSystemMTPW').val(SSH_PW);
+          //$("#ConfigSystemMTConn option[value='"+ MTConn +"']").prop('selected', true); 
+          $('#ConfigSystemMTConn select').val(MTConn).change();
+          $('#ConfigSystemGmailAddr').val(GmailAddr);
+          $('#ConfigSystemGmailPW').val(GmailPW);
+          $('#ConfigSystemTeleChatID').val(ChatID);
+          $('#ConfigSystemTeleBotID').val(BotID);
+          $('#ConfigSystemAutoUpdate select').val(AutoUpdate).change();
+          $('#ConfigSystemAutoSetup select').val(AutoSetup).change();
+          $('#ConfigSystemStaticIP').val(StaticIP);
+          $('#ConfigSystemSubNet').val(SubNet);
+          $('#ConfigSystemGatewayIP').val(GatewayIP);
+          $('#ConfigSystemGatewaySN').val(GatewaySubNet);
+
+          $('#ConfigSystemVoucherChars').val(VoucherChars);
+          $('#ConfigSystemVoucherLen').val(VoucherLen);
+
+          $('#ConfigDevAdminUN').val(DevAdminUN);
+          $('#ConfigDevAdminPW').val(DevAdminPW);
+          $('#ConfigHotspotServerName').val(HotspotSvr);
+          $('#ConfigHotspotPath').val(HotspotPath);
+          $('#ConfigSystemMTLoginType select').val(MTLoginType).change();
+       }
+
+      function RateMatrixAddRow(Name='', Cost='', Minute='', Expiration="", UserProfile="") { 
+            RatesLineCounter++;
+            if (Name=="") Name = RatesLineCounter;
+            if (UserProfile=="") UserProfile = BuildRatesSelect(RatesLineCounter);
+            $('#RateMatrix').append("<tr style='text-align: center;'>"+
+                                       "<td class='delRate' style='width: 5px;padding: 5px;text-align: center;'><i class='fa fa-remove'>x</i></td>"+
+                                       "<td style='padding: 5px;'><input type='text'   class='RateName'        style='width: 50px;'        value='"+Name+"' ReadOnly></td>"+
+                                       "<td style='padding: 5px;'><input type='number' class='RateCost'        style='width: 50px;' min='0' value='"+Cost+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='number' class='RateMinutes'     style='width: 50px;' min='0' value='"+Minute+"'></td>"+
+                                       "<td style='padding: 5px;'><input type='number' class='RateExpiration'  style='width: 50px;' min='0' value='"+Expiration+"'></td>"+
+                                       "<td style='padding: 5px;'>"+UserProfile+"</td>"+
+                                    "</tr>");
+      }
+
+       function setupRATES(RATES) {
+          //console.log(RATES);
+          var JsonInput = JSON.parse(RATES);
+          //console.log(JsonInput);
+          if (JsonInput) {
+             var i=1;
+             $(JsonInput).each((index, element) => {
+                //var N  = $(element)[0]; // Name
+                var C  = $(element)[1]; // Cost
+                var M  = $(element)[2]; // Minutes
+                var E  = $(element)[3]; // Expiration
+                var U  = $(element)[4]; // UserProfile
+
+                var N = i++;
+                var U = BuildRatesSelect("", U);
+
+                RateMatrixAddRow(N, C, M, E, U);
+             });
+          } /**/
+       }
+
+      function ProfileSetupAddRow(Type='', Server='', Profile='', ShowRate='') { 
+            RatesLineCounter++;
+            if (Type=="")    Type    = "REGULAR";
+            if (Server=="")  Server  = "default";
+            if (Profile=="") Profile = "default";
+            ShowRate = (ShowRate=='1') ? " checked=true'" : "";
+            var U = BuildRatesSelect("", Type, "disabled");
+            $('#ProfileSetupTable').append("<tr style='text-align: center;'>"+
+                                       "<td style='padding: 5px;'>"+U+"</td>"+
+                                       "<td style='padding: 5px;'><input type='text' value='"+Server+"' style='width: 100px;' maxlength='15'></td>"+
+                                       "<td style='padding: 5px;'><input type='text' value='"+Profile+"' style='width: 100px;' maxlength='15'></td>"+
+                                       "<td style='padding: 5px;'><input type='checkbox' "+ShowRate+"></td>"+                                       
+                                    "</tr>");
+      }
+
+       function setupPROFILE(PROFILE) {
+          //console.log(PROFILE);
+          var JsonInput = JSON.parse(PROFILE);
+          //console.log(JsonInput);
+
+          if (JsonInput) {
+             var i=1;
+             $(JsonInput).each((index, element) => {
+                var T  = $(element)[0]; // Type
+                var S  = $(element)[1]; // HotspotServer
+                var P  = $(element)[2]; // UserProfile
+                var D  = $(element)[3]; // DisplayRateInPortal
+                ProfileSetupAddRow(T, S, P, D);
+             });
+          } /**/
+       }
+
+       function setupPINs(PINS) {
+             //console.log("PINS : ", PINS); 
+             var PinConfig = PINS.split('|');
+             //console.log(PinConfig);
+
+             $("#CoinslotCounterPIN   option[value='"+ PinConfig[0] +"']").attr('selected', true);
+             $("#CoinslotEnablePIN    option[value='"+ PinConfig[1] +"']").prop('selected', true); 
+             $("#AdminPIN             option[value='"+ PinConfig[2] +"']").prop('selected', true); 
+             $("#ClientPushButtonPIN  option[value='"+ PinConfig[3] +"']").prop('selected', true); 
+             $("#StatusLedPIN         option[value='"+ PinConfig[4] +"']").prop('selected', true); 
+             $("#BuzzerPIN            option[value='"+ PinConfig[5] +"']").prop('selected', true); 
+       }
+
+       function saveSystemConfig() {
+          var postData = ConcatPins([
+             $('#ConfigSystemLcdType :selected').val(),
+             $('#ConfigSystemNickname').val(),
+             $('#ConfigSystemSSID').val(),
+             $('#ConfigSystemSSIDPW').val(),
+             $('#ConfigSystemMTIP').val(),
+             $('#ConfigSystemMTSSHPort').val(),
+             $('#ConfigSystemMTUN').val(),
+             $('#ConfigSystemMTPW').val(),
+             $('#ConfigSystemMTConn :selected').val(),
+             $('#ConfigSystemGmailAddr').val(),
+             $('#ConfigSystemGmailPW').val(),
+             $('#ConfigSystemTeleChatID').val(),
+             $('#ConfigSystemTeleBotID').val(),
+             $('#ConfigSystemAutoUpdate :selected').val(),
+             $('#ConfigSystemAutoSetup :selected').val(),
+             $('#ConfigSystemStaticIP').val(),
+             $('#ConfigSystemSubNet').val(),
+             $('#ConfigSystemGatewayIP').val(),
+             $('#ConfigSystemVoucherChars').val(),
+             $('#ConfigSystemVoucherLen').val(),
+             $('#ConfigDevAdminUN').val(),
+             $('#ConfigDevAdminPW').val(),
+             $('#ConfigHotspotServerName').val(),
+             $('#ConfigHotspotPath').val(),
+             $('#ConfigSystemMTLoginType :selected').val(),
+          ]);
+          //console.log(postData);
+          $.ajax({
+             timeout:3000, //3 second timeout
+             url: Server, type: 'post', async: 'false', cache: false,
+             data: { 'action':'savesystemconfig', 'data': postData, 'TimeStamp':new Date().getTime() },
+          }).done(function (Response) {
+             alert(Response);
+          }).fail(function (jqXHR, textStatus) {
+             alert("ERROR encountered during save.");
+          });
+       }
+
+       function savePINs() {
+          var postData = ConcatPins([
+                  $('#CoinslotCounterPIN').val(),
+                  $('#CoinslotEnablePIN').val(),
+                  $('#AdminPIN').val(),
+                  $('#ClientPushButtonPIN').val(),
+                  $('#StatusLedPIN').val(),
+                  $('#BuzzerPIN').val()
+	  ]);
+          //console.log(postData);
+          $.ajax({
+             timeout:3000, //3 second timeout
+             url: Server, type: 'post', async: 'false', cache: false,
+             data: { 'action':'savepins', 'data': postData, 'TimeStamp':new Date().getTime() },
+          }).done(function (Response) {
+             alert(Response);
+          }).fail(function (jqXHR, textStatus) {
+             alert("ERROR encountered during save.");
+          });
+       }
+
+
+      function GetRateMatrix(Data='') {
+         $.ajax({
+            timeout:3000, //3 second timeout
+            url: Server, type: 'post', async: 'false', cache: false,
+            data: { 'action':'getratematrix', 'TimeStamp':new Date().getTime() },
+            }).done(function (Response) {
+               //console.log(Response);
+               var JsonInput = $.parseJSON(Response);
+               if (JsonInput) {
+                  $(JsonInput).each((index, element) => {
+                     var N  = $(element)[0]; // Name
+                     var C  = $(element)[1]; // Cost
+                     var M  = $(element)[2]; // Minutes
+                     var E  = $(element)[3]; // Expiration
+                     var U  = $(element)[4]; // UserProfile
+                     RateMatrixAddRow(N, C, M, E, U);
+                  });
+               }
+            }).fail(function (jqXHR, textStatus) {
+               alert("ERROR cannot get matrix from device.");
+         }); 
+       }
+
+function saveRateMatrix(Matrix="") {
+   //console.log(Matrix);
+   $.ajax({
+      timeout:3000, //3 second timeout
+      url: Server, type: 'post', async: 'false', cache: false,
+      data: { 'action':'saveratematrix', 'data': Matrix, 'TimeStamp':new Date().getTime() },
+   }).done(function (Response) {
+      alert(Response);
+   }).fail(function (jqXHR, textStatus) {
+      alert("ERROR encountered during save.");
+   }); /**/
+}
+
+function saveProfileSetup(Matrix="") {
+   //console.log(Matrix);
+   $.ajax({
+      timeout:3000, //3 second timeout
+      url: Server, type: 'post', async: 'false', cache: false,
+      data: { 'action':'saveprofilesetup', 'data': Matrix, 'TimeStamp':new Date().getTime() },
+   }).done(function (Response) {
+      alert(Response);
+   }).fail(function (jqXHR, textStatus) {
+      alert("ERROR encountered during save.");
+   }); /**/
+}
+
+       $(document).on('click', '#SystemReboot',function(e){  
+          if (confirm("Reboot now?")) {
+             $.ajax({
+                  timeout:3000, //3 second timeout
+                  url: Server, type: 'post', async: 'false', cache: false,
+                  data: { 'action':'reboot', 'TimeStamp':new Date().getTime() },
+                  }).done(function (Response) {
+                     alert(Response);
+                  }).fail(function (jqXHR, textStatus) {
+                     alert("ERROR device not responding.");
+             }); 
+          }
+       });
+
+       $(document).on('click', '#FactoryReset',function(e){  
+          if (confirm("System Factory Reset now?")) {
+             $.ajax({
+                  timeout:3000, //3 second timeout
+                  url: Server, type: 'post', async: 'false', cache: false,
+                  data: { 'action':'factoryreset', 'TimeStamp':new Date().getTime() },
+                  }).done(function (Response) {
+                     alert(Response);
+                  }).fail(function (jqXHR, textStatus) {
+                     alert("ERROR device not responding.");
+             }); 
+          }
+       });
+
+       $(document).on('click', '#ConfigSystemSave',function(e){   // AlphaNumeric
+          if (confirm('Save?')) saveSystemConfig();
+       });
+
+       $(document).on('click', '#ConfigPinsSave',function(e){   // AlphaNumeric
+          if (ValidatePinMap()) {
+             if (confirm('Save?')) savePINs();
+          }
+       });
+
+       $(document).on('click', '#SettingsDownload', function(e){
+          $.ajax({
+             timeout:3000, //3 second timeout
+             url: Server, type: 'post', async: 'false', cache: false,
+             data: { 'action':'getsettingsbackup', 'TimeStamp':new Date().getTime() },
+             error: function(XMLHttpRequest, textStatus, errorThrown) {
+                alert(errorThrown);
+             },
+             success: function(message, textStatus, response) {
+                var header = response.getResponseHeader('Content-Disposition');
+                //var fileName = header.split("=")[1];
+                var fileName = "backup.txt";
+                var blob = new Blob([message]);
+                var link = document.createElement('a');
+                link.href = window.URL.createObjectURL(blob);
+                link.download = fileName;
+                link.click();
+             }
+          });
+       });
+
+       $(document).on('click', '#RatesMatrixAdd',function(e){   // AlphaNumeric
+          RateMatrixAddRow();
+       });
+
+       $(document).on('click', '#ProfileSetupSave',function(e){   
+            var IncompleteRow = false;
+            var row = [];
+            var TwoDarray = [];
+
+            $('#ProfileSetupTable > tbody > tr').each(function () {
+               $(this).find('td').each(function (key, val) {
+                  var type = $(this).find('input:text, input:checkbox, select').attr('type');
+                  if (type=="checkbox") {
+                     var data = ($(this).find('input:text, input:checkbox, select').is(":checked")==true) ? "1" : "0";
+                  }
+                  else {
+                     var data = $(this).find('input:text, input:checkbox, select').val();
+                  }
+                  //console.log(type, data);
+                  if (data != null) row.push(data);
+                  //console.log(row);
+               });
+               if (row.indexOf("") == -1) { // check for empty rows
+                  TwoDarray.push(row); // Used for JSON generation
+                  //console.log(TwoDarray);
+                  row = []; // clear row array
+               }
+               else {
+                  IncompleteRow = true;
+               }
+            });
+            //console.log(TwoDarray);
+            var flattenedArray = TwoDarray.flat(1); 
+            //console.log(flattenedArray.length);
+            if (IncompleteRow == true) {
+               alert("CANNOT SAVE - There are incomplete entries.");
+            }
+            else if (flattenedArray.length <= 0) {
+               alert("NOTHING TO SAVE.");
+            }
+            else {
+               var myJSON = JSON.stringify(TwoDarray);
+               //console.log(myJSON);
+               saveProfileSetup(myJSON);
+            }
+
+       });
+
+
+
+
+
+         $(document).on('click', '#RatesMatrixSave',function(e){   // AlphaNumeric
+            var IncompleteRow = false;
+            var row = [];
+            var TwoDarray = [];
+
+            $('#RateMatrix > tbody > tr').each(function () {
+               $(this).find('td').each(function (key, val) {
+                  var data = $(this).find('input, select').val();
+                  //console.log(data);
+                  if (data != null) row.push(data);
+                  //console.log(row);
+               });
+               if (row.indexOf("") == -1) { // check for empty rows
+                  TwoDarray.push(row); // Used for JSON generation
+                  //console.log(TwoDarray);
+                  row = []; // clear row array
+               }
+               else {
+                  IncompleteRow = true;
+               }
+            });
+            //console.log(TwoDarray);
+            var flattenedArray = TwoDarray.flat(1); 
+            //console.log(flattenedArray.length);
+            if (IncompleteRow == true) {
+               alert("CANNOT SAVE - There are incomplete entries.");
+            }
+            else if (flattenedArray.length <= 0) {
+               alert("NOTHING TO SAVE.");
+            }
+            else {
+               var myJSON = JSON.stringify(TwoDarray);
+               //console.log(myJSON);
+               saveRateMatrix(myJSON);
+               $('#RatesMatrixConvertDisplay').html('');
+            }
+         });
+
+         $(document).on('click', '.delRate',function(e){   // AlphaNumeric
+            if (confirm("Delete row?")) {
+               $(this).closest('tr').remove();
+            }
+         });
+
+         $(document).on('click', '#RatesMatrixConvertShow',function(e){
+            var RateType = $('#ConvSimRateType :selected').val();
+               $.ajax({
+                  timeout:3000, //3 second timeout
+                  url: Server, type: 'post', async: 'false', cache: false,
+                  data: { 'action':'getratematrixsim', 'param':'RateType', 'value':RateType, 'TimeStamp':new Date().getTime() },
+                  }).done(function (Response) {
+                     $('#RatesMatrixConvertDisplay').html(Response);
+                  }).fail(function (jqXHR, textStatus) {
+                     alert("ERROR device not responding.");
+               }); 
+         });
+
+         $(document).on('click', '#Logout',function(e){  
+            $.ajax({ timeout:3000, url: "/logout", type: 'get', async: 'false', cache: false, data: { }, });
+            setTimeout(function(){ window.open("/admin","_self"); }, 1000);
+         });
+
+         function BuildRatesSelect(ID='', SelectValue='', Disabled="") {
+            var Temp = "<select id='"+ID+"' "+Disabled+">\n";
+            for(let c in RATES){
+               //console.log(c , " " , RATES[c]);
+               var Selected = (c == SelectValue) ? "SELECTED" : "";
+               Temp = Temp + "   <option " +Selected+ " value='"+c+"'>"+RATES[c]+"</option>\n";
+            }
+            Temp = Temp + "</select>";
+            //console.log(Temp);
+            return Temp;
+         }
+
+    </script>
+
+<script>
+       $(document).ready(function(){
+
+          //console.log(DeviceCONFIG);
+
+          sleep(1).then(() => { 
+          }).then(() => {
+             sleep(1000);
+             addScript("bootstrap.min.js"); 
+          }).then(() => {
+             sleep(1000);
+             addScript("jquery.alphanumeric.pack.js"); 
+          }).then(() => { 
+             //sleep(1000);
+             //addFavicon("favicon.ico");
+             changeFavicon('📶');
+          }).then(() => { 
+             $("#MainDiv").css("display", "block");
+             $("#loaderDiv").fadeOut(1000);
+          });
+
+          // Fill-up options
+          for(let c in PINS){
+               //console.log(c , " " , PINS[c]);
+               $('#CoinslotCounterPIN').append($('<option>', { value: c, text: PINS[c] }));
+               $('#CoinslotEnablePIN').append($('<option>', { value: c, text: PINS[c] }));
+               $('#AdminPIN').append($('<option>', { value: c, text: PINS[c] }));
+               $('#ClientPushButtonPIN').append($('<option>', { value: c, text: PINS[c] }));
+               $('#StatusLedPIN').append($('<option>', { value: c, text: PINS[c] }));
+               $('#BuzzerPIN').append($('<option>', { value: c, text: PINS[c] }));
+          }
+
+          // Show selected
+          if (typeof(DevicePINS)   != "undefined") setupPINs(DevicePINS);
+          if (typeof(DeviceRATES)  != "undefined") setupRATES(DeviceRATES);
+          if (typeof(ProfileSetup) != "undefined") setupPROFILE(ProfileSetup);
+          if (typeof(DeviceID)     != "undefined") { applyCONFIG(); } else { alert("CONFIG DATA IS MISSING."); }
+
+          ShowUpTimeClock();
+
+          BuildRatesSelect('Rate1', "SPECIAL1");
+
+       });
+</script>
+
+</head>
+
+<body class="text-left d-flex">
+    <div id="MainDiv" class="container text-left">
+        <h1 style="height: 55px;margin: 10px 0px 5px;">Device Admin</h1>
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation"><a class="nav-link active" role="tab" data-toggle="tab" href="#tab-1">Status</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-2">Config</a></li>
+                <li class="nav-item" role="presentation"><a class="nav-link" role="tab" data-toggle="tab" href="#tab-3">Rates</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" role="tabpanel" id="tab-1"><br>
+                    <div role="tablist" id="accordion-1" style="margin: 0px 0px 5px;">
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="true" aria-controls="accordion-1 .item-1" href="#accordion-1 .item-1">Device</a></h5>
+                            </div>
+                            <div class="collapse show item-1" role="tabpanel" data-parent="#accordion-1">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="Status_Label" style="font-weight: bold;">Device ID</td>
+                                                    <td id="Status_DeviceID" class="Status_Content">?</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight: bold;">Install Date</td>
+                                                    <td id="Status_InstallDate">?<br></td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="font-weight: bold;">Uptime</td>
+                                                    <td id="Status_Uptime">?<br></td>
+                                                </tr>
+                                                <tr><td colspan='2'>
+                                                   <button class="btn btn-primary" type="button" id="FactoryReset">Factory Reset</button>
+                                                   &nbsp;&nbsp;&nbsp;
+                                                   <button class="btn btn-primary" type="button" id="SystemReboot">Reboot</button>
+                                                   &nbsp;&nbsp;&nbsp;
+                                                   <button class="btn btn-primary" type="button" id="Logout">Logout</button>
+                                                </td>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane" role="tabpanel" id="tab-2"><br>
+                    <div role="tablist" id="accordion-2">
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-2 .item-1" href="#accordion-2 .item-1">Firmware</a></h5>
+                            </div>
+                            <div class="collapse item-1" role="tabpanel" data-parent="#accordion-2">
+                                <div class="card-body">
+                                    <p class="card-text"> </p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 5px;font-weight: bold;">Version</td>
+                                                    <td style="padding: 5px;" id="ConfigFirmware">1.2</td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Compile Date</td>
+                                                    <td style="padding: 5px;" id="ConfigFirmwareCompileDate">YYY/MM/DD HH:MM:SS<br></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Type</td>
+                                                    <td style="padding: 5px;" id="ConfigFirmwareType">DEMO</td>
+                                                </tr>
+                                                <tr></tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <form method='POST' action='/doUpdate' enctype='multipart/form-data'>
+                                       <input type="file" name='update' style="text-align: left;">
+                                       <button class="btn btn-primary" id="ConfigFirmwareUpdate" type="submit">UPDATE</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-2 .item-2" href="#accordion-2 .item-2">Pins</a></h5>
+                            </div>
+                            <div class="collapse item-2" role="tabpanel" data-parent="#accordion-2">
+                                <div class="card-body">
+                                    <p class="card-text">   </p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody style="padding: 5px;">
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Coinslot Counter</td>
+                                                    <td style="text-align: center;padding: 5px;"><select id="CoinslotCounterPIN" name="CoinslotCounterPIN" class="PinsSelection" style="padding: 5px;">
+                                                        </select></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Coinslot Enable</td>
+                                                    <td style="text-align: center;padding: 5px;"><select id="CoinslotEnablePIN" name="CoinslotEnablePIN" class="PinsSelection" style="padding: 5px;">
+                                                        </select></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Admin Pushbutton</td>
+                                                    <td style="text-align: center;padding: 5px;"><select id="AdminPIN" name="AdminPIN" class="PinsSelection" style="padding: 5px;">
+                                                        </select></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Client Pushbutton</td>
+                                                    <td style="text-align: center;padding: 5px;"><select id="ClientPushButtonPIN" name="ClientPushButtonPIN" class="PinsSelection" style="padding: 5px;">
+                                                        </select></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Status LED</td>
+                                                    <td style="text-align: center;padding: 5px;"><select id="StatusLedPIN" name="StatusLedPIN" class="PinsSelection" style="padding: 5px;">
+                                                        </select></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Buzzer</td>
+                                                    <td style="text-align: center;padding: 5px;"><select id="BuzzerPIN" name="BuzzerPIN" class="PinsSelection" style="padding: 5px;">
+                                                        </select></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><button class="btn btn-primary" id="ConfigPinsSave" type="button">SAVE</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-2 .item-3" href="#accordion-2 .item-3">System</a></h5>
+                            </div>
+                            <div class="collapse item-3" role="tabpanel" data-parent="#accordion-2">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                                <tr></tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">LCD Type</td>
+                                                    <td style="padding: 5px;">
+                                                       <select style="padding: 5px;" id='ConfigSystemLcdType'>
+                                                          <option value="0">Type0 20x4a </option>
+                                                          <option value="1">Type1 20x4b</option>
+                                                          <option value="2">Type2 16x2a</option>
+                                                          <option value="3">Type3 16x2b</option>
+                                                       </select>
+                                                    </td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Nickname</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemNickname'></td>
+                                                </tr>
+
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">SSID</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemSSID' value='TestWIFI'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">SSID_PW</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemSSIDPW' value=''></td>
+                                                </tr>
+
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik IP</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemMTIP' value='10.0.0.1'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik Username</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemMTUN' value='admin'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik Password</td>
+                                                    <td style="padding: 5px;"><input type="password" id='ConfigSystemMTPW' minlength="4" maxlength="13" value='admin'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik SSH Port</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemMTSSHPort' minlength="2" maxlength="4" value='22'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik Connection</td>
+                                                    <td style="padding: 5px;">
+                                                       <select style="padding: 5px;" id='ConfigSystemMTConn'>
+                                                          <option value="OD">On Demand</option>
+                                                          <option value="KA" SELECTED>Keep Alive</option>
+                                                       </select>
+                                                    </td>
+                                                </tr>
+                                                <tr style="padding: 5px; display:none;">
+                                                    <td style="padding: 5px;font-weight: bold; display:none;">gMail Address</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGmailAddr' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px; display:none;">
+                                                    <td style="padding: 5px;font-weight: bold;">gMail Password</td>
+                                                    <td style="padding: 5px;"><input type="password" id='ConfigSystemGmailPW' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Telegram ChatID</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleChatID' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Telegram BotID</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemTeleBotID' value='' title=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">System AutoUpdate</td>
+                                                    <td style="padding: 5px;">
+                                                       <select style="padding: 5px;" id='ConfigSystemAutoUpdate'>
+                                                          <option value="0" SELECTED>NO</option>
+                                                          <option value="1">YES</option>
+                                                       </select>
+                                                    </td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">System AutoSetup</td>
+                                                    <td style="padding: 5px;">
+                                                       <select style="padding: 5px;" id='ConfigSystemAutoSetup'>
+                                                          <option value="0" SELECTED>NO</option>
+                                                          <option value="1">YES</option>
+                                                       </select>
+                                                    </td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Device will DHCP if this is empty'>
+                                                    <td style="padding: 5px;font-weight: bold;">Device Static IP</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemStaticIP' value=''></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Used only if StaticIP is given'>
+                                                    <td style="padding: 5px;font-weight: bold;">Device SubNet</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemSubNet' value='255.255.0.0'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title='Will be used ONLY with static IP'>
+                                                    <td style="padding: 5px;font-weight: bold;">Gateway IP</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewayIP' value='10.0.0.1'></td>
+                                                </tr>
+                                                <tr style="padding: 5px; display:none;" title='Will be used ONLY with static IP'>
+                                                    <td style="padding: 5px;font-weight: bold;">Gateway SubNet</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemGatewaySN' value='255.255.0.0'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title=''>
+                                                    <td style="padding: 5px;font-weight: bold;">Voucher Chars</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemVoucherChars' value='BCDFGHJKLNPRSTVWZAEUbcdfghjknprstvwzaeiou0123456789'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;" title=''>
+                                                    <td style="padding: 5px;font-weight: bold;">Voucher Length</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigSystemVoucherLen' value='8'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">DeviceAdmin UserName</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigDevAdminUN' value='admin'></td>
+                                                </tr>
+                                                <tr style="padding: 5px; 5px;font-weight: bold;">
+                                                    <td style="padding: 5px;font-weight: bold;">DeviceAdmin Password</td>
+                                                    <td style="padding: 5px;"><input type="password" id='ConfigDevAdminPW' value='admin'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">HotSpot ServerName</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigHotspotServerName' value='default'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">HotSpot Path</td>
+                                                    <td style="padding: 5px;"><input type="text" id='ConfigHotspotPath' value='flash/hs'></td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;font-weight: bold;">Mikrotik Login Type</td>
+                                                    <td style="padding: 5px;">
+                                                       <select style="padding: 5px;" id='ConfigSystemMTLoginType'>
+                                                          <option value="UNPW">UN+PW</option>
+                                                          <option value="UN" SELECTED>UN Only</option>
+                                                       </select>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div><button class="btn btn-primary" id="ConfigSystemSave" type="button">SAVE</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card" style="display:none">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-2 .item-4" href="#accordion-2 .item-4">Settings</a></h5>
+                            </div>
+                            <div class="collapse item-4" role="tabpanel" data-parent="#accordion-2">
+                                <div class="card-body">
+                                    <p class="card-text"> </p>
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <tbody>
+                                                <tr>
+                                                    <td style="padding: 5px;">
+                                                       <button class="btn btn-primary" type="button" id="SettingsDownload">DOWNLOAD</button>
+                                                    </td>
+                                                </tr>
+                                                <tr style="padding: 5px;">
+                                                    <td style="padding: 5px;">
+                                    <form method='POST' action='/upload' enctype='multipart/form-data'>
+                                       <input type="file" name='data' style="text-align: left;">
+                                       <button class="btn btn-primary" id="SettingsUpload" type="submit">RESTORE</button>
+                                    </form>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="tab-pane" role="tabpanel" id="tab-3"><br>
+                    <div role="tablist" id="accordion-3">
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-3 .item-1" href="#accordion-3 .item-1">Matrix</a></h5>
+                            </div>
+                            <div class="collapse item-1" role="tabpanel" data-parent="#accordion-3">
+                                <div class="card-body">
+                                    <p class="card-text"> </p>
+                                    <button class="btn btn-primary" type="button" id='RatesMatrixAdd'>ADD</button> &nbsp;&nbsp;
+                                    <button class="btn btn-primary" type="button" id='RatesMatrixSave'>SAVE</button>
+
+                                    <div class="table-responsive" style="padding: 5px;">
+                                        <table class="table zebra" id='RateMatrix'>
+                                            <thead>
+                                                <tr style="text-align: center;">
+                                                    <th style="width: 5px;"></th>
+                                                    <th>#</th>
+                                                    <th>Cost</th>
+                                                    <th>Mins</th>
+                                                    <th>Expire</th>
+                                                    <th>Profile</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-3 .item-4" href="#accordion-3 .item-2">Profile Setup</a></h5>
+                            </div>
+                            <div class="collapse item-2" role="tabpanel" data-parent="#accordion-3">
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table" id="ProfileSetupTable">
+                                            <thead>
+                                                <tr class="text-center">
+                                                    <th><button class="btn btn-primary" type="button" id="ProfileSetupSave">SAVE</button></th>
+                                                    <th>Hotspot<br>Server</th>
+                                                    <th>Mikrotik <br>User Profile</th>
+                                                    <th>Enable <br> Profile</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+
+                        <div class="card">
+                            <div class="card-header" role="tab">
+                                <h5 class="mb-0"><a data-toggle="collapse" aria-expanded="false" aria-controls="accordion-3 .item-3" href="#accordion-3 .item-3">Conversion Simulator</a></h5>
+                            </div>
+                            <div class="collapse item-3" role="tabpanel" data-parent="#accordion-3">
+                                <div class="card-body">
+                                    <select style="padding-top: 5px; padding-bottom: 5px;" id="ConvSimRateType">
+                                                            <option value="REGULAR" selected="">Regular</option>
+                                                            <option value="PROMO1">Promo1</option>
+                                                            <option value="PROMO2">Promo2</option>
+                                                            <option value="SPECIAL1">Special1</option>
+                                                            <option value="SPECIAL2">Special2</option>
+                                    </select>
+
+                                    <button class="btn btn-primary" type="button" id="RatesMatrixConvertShow">Show</button><br><br>
+                                    <div id="RatesMatrixConvertDisplay"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loaderDiv" class="spinner"></div>
+</body>
+
+
+</html>

@@ -1,0 +1,67 @@
+.zui-table {
+    border: solid 1px #DDEEEE;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font: normal 13px Arial, sans-serif;
+}
+.zui-table thead th {
+    background-color: #DDEFEF;
+    border: solid 1px #DDEEEE;
+    color: #336B6B;
+    padding: 10px;
+    text-align: left;
+    text-shadow: 1px 1px 1px #fff;
+}
+.zui-table tbody td {
+    border: solid 1px #DDEEEE;
+    color: #333;
+    padding: 10px;
+    text-shadow: 1px 1px 1px #fff;
+}
+
+
+
+#qr-input-file {
+   opacity: 0;
+   position: absolute;
+   z-index: -1;
+}
+
+
+#InsertCoin1 {
+  -webkit-animation: btnWiggle 3s infinite;
+  -moz-animation: btnWiggle 3s infinite;
+  -o-animation: btnWiggle 3s infinite;
+  animation: btnWiggle 3s infinite;
+}
+/* animation */
+@-webkit-keyframes btnWiggle {
+	0% {-webkit-transform: rotate(0deg);}
+	2% {-webkit-transform: rotate(-5deg);}
+	3.5% {-webkit-transform: rotate(3deg);}
+	5% {-webkit-transform: rotate(0deg);}
+	10.5% {-webkit-transform: rotate(-5deg);}
+	20% {-webkit-transform: rotate(3deg);}
+	23% {-webkit-transform: rotate(0deg);}
+	100% {-webkit-transform: rotate(0deg);}
+}
+@-o-keyframes btnWiggle {
+	0% {-webkit-transform: rotate(0deg);}
+	2% {-webkit-transform: rotate(-5deg);}
+	3.5% {-webkit-transform: rotate(3deg);}
+	5% {-webkit-transform: rotate(0deg);}
+	10.5% {-webkit-transform: rotate(-5deg);}
+	20% {-webkit-transform: rotate(3deg);}
+	23% {-webkit-transform: rotate(0deg);
+	100% {-webkit-transform: rotate(0deg);}
+}
+@keyframes btnWiggle {
+	0% {-webkit-transform: rotate(0deg);}
+	2% {-webkit-transform: rotate(-5deg);}
+	3.5% {-webkit-transform: rotate(3deg);}
+	5% {-webkit-transform: rotate(0deg);}
+	10.5% {-webkit-transform: rotate(-5deg);}
+	20% {-webkit-transform: rotate(3deg);}
+	23% {-webkit-transform: rotate(0deg);
+	100% {-webkit-transform: rotate(0deg);}
+}

@@ -1,0 +1,9 @@
+This is a <b>help</b> <i>file</i> inside MT hotspot folder <u>(help.txt)</u><br><br>
+<pre>
+1. Select the VendoMachine you wish to use.
+2. Select the WifiRate
+3. Click the InsertCoin button
+4. Click the Activate button
+
+* See the vouchers via the SavedVoucher button.
+</pre>
